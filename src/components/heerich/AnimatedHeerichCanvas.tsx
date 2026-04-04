@@ -61,6 +61,7 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
   const startRef = useRef(0)
   const lastFrameRef = useRef(0)
   const visibleRef = useRef(true)
+  const hasPaintedRef = useRef(false)
   const guardNextPaintRef = useRef(true)
   const sizeRef = useRef({ w: 0, h: 0 })
 
@@ -100,6 +101,8 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
     // Reset timing on program/theme change
     startRef.current = 0
     lastFrameRef.current = 0
+    visibleRef.current = true
+    hasPaintedRef.current = false
     guardNextPaintRef.current = true
 
     // Size the canvas
@@ -113,6 +116,11 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
         canvas.height = h
         sizeRef.current = { w, h }
         guardNextPaintRef.current = true
+        if (!hasPaintedRef.current && w > 0 && h > 0) {
+          paint(0, true)
+          hasPaintedRef.current = true
+          guardNextPaintRef.current = false
+        }
       }
     }
 
@@ -122,6 +130,7 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
 
     // Paint first frame immediately
     paint(0, guardNextPaintRef.current)
+    hasPaintedRef.current = true
     guardNextPaintRef.current = false
 
     const interval = 1000 / prog.fps
@@ -131,9 +140,10 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
 
       const elapsed = now - startRef.current
 
-      if (now - lastFrameRef.current >= interval && visibleRef.current) {
+      if (now - lastFrameRef.current >= interval && (visibleRef.current || !hasPaintedRef.current)) {
         lastFrameRef.current = now
         paint(elapsed, guardNextPaintRef.current)
+        hasPaintedRef.current = true
         guardNextPaintRef.current = false
       }
 
@@ -150,6 +160,7 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
         const now = performance.now()
         const elapsed = startRef.current ? now - startRef.current : 0
         paint(elapsed, true)
+        hasPaintedRef.current = true
         guardNextPaintRef.current = false
       },
       { threshold: 0.05 },
