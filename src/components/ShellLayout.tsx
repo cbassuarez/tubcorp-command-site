@@ -3,6 +3,7 @@ import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { CommandButton } from '@/components/CommandButton'
 import { SignalTape } from '@/components/SignalTape'
 import { StatusStrip } from '@/components/StatusStrip'
+import { OperatorCanvas } from '@/components/effects/OperatorCanvas'
 import { operatorNavigation } from '@/content/siteContent'
 import type { TelemetryViewModel } from '@/hooks/useTelemetry'
 
@@ -33,7 +34,7 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
         </nav>
       </aside>
 
-      <main className="mx-auto w-full max-w-[1420px] px-4 pb-24 pt-20 md:pl-[300px] md:pr-8">
+      <OperatorCanvas className="mx-auto w-full max-w-[1420px] px-4 pb-24 pt-20 md:pl-[300px] md:pr-8">
         <SignalTape lines={telemetry.logLines.slice(0, 8)} />
         <AnimatePresence mode="wait">
           <motion.div
@@ -47,7 +48,7 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
             {outlet}
           </motion.div>
         </AnimatePresence>
-      </main>
+      </OperatorCanvas>
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface-elevated/96 p-2 md:hidden">
         <div className="grid grid-cols-4 gap-2">
