@@ -1,28 +1,31 @@
 import type { CommandPageSpec, PageCommandAction } from '@/types/contracts'
 
-export const shellNavigation = [
-  { path: '/', label: 'OVERVIEW' },
-  { path: '/systems', label: 'SYSTEMS' },
-  { path: '/participation', label: 'PARTICIPATION' },
-  { path: '/surfaces', label: 'SURFACES' },
-  { path: '/telemetry', label: 'TELEMETRY' },
-  { path: '/doctrine', label: 'DOCTRINE' },
-  { path: '/access', label: 'ACCESS' },
+export const operatorNavigation = [
+  { path: '/operators', label: 'OVERVIEW' },
+  { path: '/operators/systems', label: 'SYSTEMS' },
+  { path: '/operators/participation', label: 'PARTICIPATION' },
+  { path: '/operators/surfaces', label: 'SURFACES' },
+  { path: '/operators/telemetry', label: 'TELEMETRY' },
+  { path: '/operators/doctrine', label: 'DOCTRINE' },
+  { path: '/operators/access', label: 'ACCESS' },
 ] as const
 
+/** @deprecated use operatorNavigation */
+export const shellNavigation = operatorNavigation
+
 export const globalActions: PageCommandAction[] = [
-  { id: 'jump-surfaces', label: 'Explore Operator Surfaces', kind: 'route', target: '/surfaces' },
-  { id: 'jump-telemetry', label: 'View Live Telemetry', kind: 'route', target: '/telemetry' },
-  { id: 'jump-access', label: 'Open Access Portal', kind: 'route', target: '/access' },
+  { id: 'jump-surfaces', label: 'Explore Operator Surfaces', kind: 'route', target: '/operators/surfaces' },
+  { id: 'jump-telemetry', label: 'View Live Telemetry', kind: 'route', target: '/operators/telemetry' },
+  { id: 'jump-access', label: 'Open Access Portal', kind: 'route', target: '/operators/access' },
 ]
 
 export const pageSpecs: Record<string, CommandPageSpec> = {
   entry: {
     id: 'entry',
-    route: '/',
-    title: 'TubCorp Audience Governance Platform',
-    subtitle: 'Procurement and operator onboarding portal',
-    command: 'briefing.open(channel: public-sector)',
+    route: '/operators',
+    title: 'TubCorp Operator Portal',
+    subtitle: 'Field operations and deployment management',
+    command: 'briefing.open(channel: operator)',
     sections: [
       {
         id: 'mission',
@@ -45,18 +48,12 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
     ],
     actions: [
       { id: 'download-ios', label: 'Download Companion iOS App', kind: 'external', target: 'env:ios' },
-      {
-        id: 'download-testflight',
-        label: 'Open TestFlight Distribution',
-        kind: 'external',
-        target: 'env:testflight',
-      },
-      { id: 'enter-network', label: 'Start Access Workflow', kind: 'route', target: '/access' },
+      { id: 'enter-network', label: 'Start Access Workflow', kind: 'route', target: '/operators/access' },
     ],
   },
   systems: {
     id: 'systems',
-    route: '/systems',
+    route: '/operators/systems',
     title: 'Tub Systems',
     subtitle: 'Input to inference to stage projection',
     command: 'systems.map(resolve: live)',
@@ -75,7 +72,7 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
   },
   participation: {
     id: 'participation',
-    route: '/participation',
+    route: '/operators/participation',
     title: 'Participation Protocol',
     subtitle: 'Human signal policy and governance model',
     command: 'participation.inspect(scope: live)',
@@ -95,7 +92,7 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
   },
   surfaces: {
     id: 'surfaces',
-    route: '/surfaces',
+    route: '/operators/surfaces',
     title: 'Companion Surfaces',
     subtitle: 'Steer, Play, Learn, and Settings',
     command: 'surfaces.list()',
@@ -115,7 +112,7 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
   },
   telemetry: {
     id: 'telemetry',
-    route: '/telemetry',
+    route: '/operators/telemetry',
     title: 'Live Signal Board',
     subtitle: 'Link, feed, and freshness observability',
     command: 'telemetry.watch(stream: all)',
@@ -134,7 +131,7 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
   },
   doctrine: {
     id: 'doctrine',
-    route: '/doctrine',
+    route: '/operators/doctrine',
     title: 'Operator Doctrine',
     subtitle: 'Compliance controls and consequence framework',
     command: 'doctrine.print(profile: operator)',
@@ -153,7 +150,7 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
   },
   access: {
     id: 'access',
-    route: '/access',
+    route: '/operators/access',
     title: 'Access Portal',
     subtitle: 'Role selection and deployment handoff',
     command: 'access.portal(open: true)',
@@ -170,8 +167,7 @@ export const pageSpecs: Record<string, CommandPageSpec> = {
     ],
     actions: [
       { id: 'ios', label: 'Download Companion iOS App', kind: 'external', target: 'env:ios' },
-      { id: 'testflight', label: 'Open TestFlight Distribution', kind: 'external', target: 'env:testflight' },
-      { id: 'back-entry', label: 'Return to Overview', kind: 'route', target: '/' },
+      { id: 'back-entry', label: 'Return to Overview', kind: 'route', target: '/operators' },
     ],
   },
 }

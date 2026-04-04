@@ -13,9 +13,13 @@ export default {
           cyan: '#0b7480',
           amber: '#9b6a00',
           alert: '#b1283f',
+          dark: '#1c1a16',
+          'dark-surface': '#2a2620',
+          'dark-line': '#3d382f',
         },
       },
       fontFamily: {
+        sans: ['Inter', '"IBM Plex Sans"', '"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'monospace'],
       },
       boxShadow: {

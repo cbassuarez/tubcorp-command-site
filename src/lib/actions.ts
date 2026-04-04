@@ -10,9 +10,6 @@ export function resolveActionHref(action: PageCommandAction): string {
     if (action.target === 'env:ios') {
       return env.companionIosUrl ?? '#'
     }
-    if (action.target === 'env:testflight') {
-      return env.companionTestflightUrl ?? '#'
-    }
     return action.target
   }
 

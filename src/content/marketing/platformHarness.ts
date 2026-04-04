@@ -1,0 +1,85 @@
+import type { MarketingPageSpec } from '@/types/contracts'
+
+export const platformHarnessSpec: MarketingPageSpec = {
+  id: 'platform-harness',
+  route: '/platform/harness',
+  title: 'Harness // Signal Processing Engine',
+  description: 'Real-time multi-modal signal processing with eleven governed processing regimes, continuous feature extraction, and hardware-enforced safety architecture.',
+  blocks: [
+    {
+      id: 'hero',
+      type: 'hero',
+      variant: 'compact',
+      eyebrow: 'Platform // Signal Processing',
+      headline: 'Eleven Regimes. One Governed Engine.',
+      subheadline: 'The Harness is the real-time signal processing core of the TubCorp platform. It ingests multi-modal participant input, extracts continuous behavioral features, and applies governed processing regimes with hardware-enforced safety limits.',
+      actions: [
+        { id: 'policy', label: 'See Inference Layer', kind: 'route', target: '/platform/policy-engine' },
+        { id: 'procurement', label: 'Request Deployment', kind: 'route', target: '/procurement' },
+      ],
+    },
+    {
+      id: 'heerich-visual',
+      type: 'heerich',
+      program: 'signal-cascade',
+      height: 'h-[200px] lg:h-[280px]',
+      caption: 'Signal processing regime visualization // live rendering',
+    },
+    {
+      id: 'regimes',
+      type: 'featureGrid',
+      eyebrow: 'Processing Regimes',
+      title: 'Eleven Modes of Governed Signal Transformation',
+      columns: 3,
+      items: [
+        { title: 'Mode 0 // Transparent Passthrough', body: 'Subtle room convolution with minimal coloration. The baseline monitoring state for ambient acoustic observation.' },
+        { title: 'Mode 1 // Temporal Reinforcement', body: 'Onset-gated quantized repetition for rhythmic pattern extraction and reinforcement. Configurable grid division and hold parameters.' },
+        { title: 'Mode 2 // Micro-Temporal Decomposition', body: 'Time-fractured granular synthesis for texture generation. Grain size, density, scan rate, and freeze probability are policy-controlled.' },
+        { title: 'Mode 3 // Amplitude Saturation', body: 'Distortion and resonant filtering for high-energy crowd states. Drive, bit depth, and downsampling parameters respond to environmental intensity.' },
+        { title: 'Mode 4 // Gesture-Triggered Resampling', body: 'Density-controlled sample playback triggered by participant gesture events. Bank selection and spatial routing are manifest-governed.' },
+        { title: 'Mode 5 // Parametric Reconstruction (Wet)', body: 'Harmonic synthesis driven by pitch tracking, with an eight-voice polyphony cap and twelve-note-per-second rate limit. Chord vocabulary is centrally authored.' },
+        { title: 'Mode 6 // Parametric Reconstruction (Dry)', body: 'Parallel dry input with spatialized harmonic voices. Three-voice maximum with six-note-per-second ceiling ensures controlled density.' },
+        { title: 'Mode 7 // Spectral Redistribution', body: 'Bucket-brigade delay with crossfaded handoffs. Spectral content is redistributed across temporal slots with configurable swap rates.' },
+        { title: 'Mode 8 // Dimensional Positioning', body: 'Stereo spatial processing with diffuse reverb tail. Particle motion and spread parameters create immersive spatial depth.' },
+        { title: 'Mode 9 // Frequency-Split Distribution', body: 'Three-band spatial split distributes low, mid, and high frequency content across independent spatial fields.' },
+        { title: 'Mode 10 // Reserved Protocol', body: 'Experimental processing regime reserved for deployment-specific configurations. Parameters are defined per-contract.' },
+      ],
+    },
+    {
+      id: 'features',
+      type: 'split',
+      eyebrow: 'Feature Extraction',
+      title: 'Continuous Behavioral Fingerprinting',
+      body: 'The Harness continuously extracts a multidimensional behavioral fingerprint from the acoustic environment at 10 Hz resolution. Loudness, onset density, spectral centroid, band energies, noisiness, pitch, and harmonic key estimation provide the feature vector that drives downstream policy inference.\n\nFeature normalization applies hysteresis smoothing to prevent jitter in the governance layer. Meta-features such as energy, activity, brightness, and silence state are derived from raw measurements and used as regime transition inputs.',
+      imagePosition: 'right',
+      actions: [
+        { id: 'policy', label: 'See Policy Engine', kind: 'route', target: '/platform/policy-engine' },
+      ],
+    },
+    {
+      id: 'safety',
+      type: 'prose',
+      eyebrow: 'Safety Architecture',
+      title: 'Hardware-Enforced Participant Protection',
+      body: 'The Harness enforces non-negotiable safety constraints at the hardware level. Reverb wet mix is capped at 50%. A master limiter ceiling of -1 dBFS prevents output exceedance under all processing conditions. Voice-activity gating in parametric reconstruction modes enforces strict polyphony and note-rate limits.\n\nSafety interventions — limiter activations, voice caps, density limits — are logged as structured events in the session trace. No safety rail can be overridden by operator input or policy inference. The Harness treats participant safety as a constraint, not a parameter.',
+    },
+    {
+      id: 'manifests',
+      type: 'prose',
+      eyebrow: 'Configuration',
+      title: 'Manifest-Governed Deployment',
+      body: 'Every deployment-specific configuration is defined in version-controlled manifest files. Banks, instrument mappings, chord vocabularies, motif patterns, and spatial routing algorithms are centrally authored and bundled with a cryptographic fingerprint.\n\nThe Harness validates manifest integrity at startup and rejects any configuration that does not match the pinned contract fingerprint. This ensures that field deployments operate on reviewed, approved configurations — not ad-hoc modifications.',
+    },
+    {
+      id: 'cta',
+      type: 'cta',
+      variant: 'light',
+      headline: 'The Harness is one layer of a governed stack.',
+      body: 'See how the Policy Engine governs processing decisions in real time.',
+      actions: [
+        { id: 'policy', label: 'Inference Governance', kind: 'route', target: '/platform/policy-engine' },
+        { id: 'platform', label: 'Full Platform', kind: 'route', target: '/platform' },
+      ],
+    },
+  ],
+}

@@ -3,7 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { CommandButton } from '@/components/CommandButton'
 import { SignalTape } from '@/components/SignalTape'
 import { StatusStrip } from '@/components/StatusStrip'
-import { shellNavigation } from '@/content/siteContent'
+import { operatorNavigation } from '@/content/siteContent'
 import type { TelemetryViewModel } from '@/hooks/useTelemetry'
 
 interface ShellLayoutProps {
@@ -22,7 +22,7 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
           Navigation
         </h2>
         <nav className="space-y-2">
-          {shellNavigation.map((item) => (
+          {operatorNavigation.map((item) => (
             <NavLink key={item.path} to={item.path}>
               {({ isActive }) => (
                 <CommandButton label={item.label} active={isActive} className="w-full justify-start px-3 py-2.5" />
@@ -50,7 +50,7 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
 
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d2c8b3] bg-[#f5efdf]/96 p-2 md:hidden">
         <div className="grid grid-cols-4 gap-2">
-          {shellNavigation.slice(0, 4).map((item) => (
+          {operatorNavigation.slice(0, 4).map((item) => (
             <NavLink key={item.path} to={item.path}>
               {({ isActive }) => (
                 <CommandButton
