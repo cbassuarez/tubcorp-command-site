@@ -6,6 +6,25 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
   value: vi.fn(() => null),
 })
 
+// Mock ResizeObserver
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: MockResizeObserver,
+})
+
+Object.defineProperty(globalThis, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: MockResizeObserver,
+})
+
 // Mock IntersectionObserver for framer-motion whileInView
 class MockIntersectionObserver {
   observe() {}

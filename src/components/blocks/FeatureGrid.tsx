@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { DitheredShadow } from '@/components/DitheredShadow'
+import { HoverCanvas } from '@/components/effects/HoverCanvas'
 import type { FeatureGridBlock } from '@/types/contracts'
 
 interface FeatureGridProps {
@@ -51,7 +53,7 @@ export function FeatureGrid({ block }: FeatureGridProps) {
 
 function FeatureCard({ title, body, link }: { title: string; body: string; icon?: string; link?: string }) {
   const content = (
-    <div className="h-full border border-line bg-surface-secondary/60 p-5 transition-colors hover:bg-surface-secondary">
+    <div className="h-full border border-line bg-surface-secondary/60 p-5">
       <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
         {title}
       </h3>
@@ -59,9 +61,11 @@ function FeatureCard({ title, body, link }: { title: string; body: string; icon?
     </div>
   )
 
-  if (link) {
-    return <Link to={link}>{content}</Link>
-  }
+  const inner = link ? <Link to={link}>{content}</Link> : content
 
-  return content
+  return (
+    <DitheredShadow preset="subtle" offsetY={8} blur={18} opacity={0.3} pixelScale={3}>
+      <HoverCanvas>{inner}</HoverCanvas>
+    </DitheredShadow>
+  )
 }

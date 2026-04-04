@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Activity, Radio, Shield } from 'lucide-react'
 import { CommandSections } from '@/components/CommandSections'
+import { DitheredShadow } from '@/components/DitheredShadow'
 import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 import { PageFrame } from '@/components/PageFrame'
 import { StatusChip } from '@/components/StatusChip'
@@ -15,21 +16,24 @@ export function EntryBriefingPage() {
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
       <div className="space-y-4">
         {/* Hero heerich with classification banner */}
-        <div className="relative overflow-hidden border border-accent-signal/30 bg-surface-elevated p-4 sm:p-6">
-          <motion.div
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-accent-signal/60"
-            animate={{ opacity: [0.2, 1, 0.2] }}
-            transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
-          />
-          <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-accent-signal">
-            Classified // Operator Briefing // {telemetry.state.source} Source
-          </p>
-          <AnimatedHeerichCanvas
-            program="hero-pulse"
-            theme="dark"
-            className="h-[240px] w-full sm:h-[280px]"
-          />
-        </div>
+        <DitheredShadow preset="terminal" offsetY={16} blur={32} opacity={0.5} pixelScale={3}>
+          <div className="relative overflow-hidden border border-accent-signal/30 bg-surface-elevated p-4 sm:p-6">
+            <motion.div
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-accent-signal/60"
+              animate={{ opacity: [0.2, 1, 0.2] }}
+              transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+            />
+            <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-accent-signal">
+              Classified // Operator Briefing // {telemetry.state.source} Source
+            </p>
+            <AnimatedHeerichCanvas
+              program="hero-pulse"
+              theme="dark"
+              className="h-[240px] w-full sm:h-[280px]"
+              noShadow
+            />
+          </div>
+        </DitheredShadow>
 
         {/* Three-column status panels */}
         <div className="grid gap-3 md:grid-cols-3">

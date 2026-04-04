@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
+import { HoverCanvas } from '@/components/effects/HoverCanvas'
 
 interface CommandButtonProps {
   label: string
@@ -43,24 +44,20 @@ export function CommandButton({
     .join(' ')
     .trim()
 
-  if (as === 'a') {
-    return (
-      <motion.a
-        whileHover={{ y: -1 }}
-        whileTap={{ scale: 0.99 }}
-        href={href}
-        target={target}
-        rel={rel}
-        className={baseClass}
-        data-testid={testId}
-      >
-        {icon}
-        <span>{label}</span>
-      </motion.a>
-    )
-  }
-
-  return (
+  const el = as === 'a' ? (
+    <motion.a
+      whileHover={{ y: -1 }}
+      whileTap={{ scale: 0.99 }}
+      href={href}
+      target={target}
+      rel={rel}
+      className={baseClass}
+      data-testid={testId}
+    >
+      {icon}
+      <span>{label}</span>
+    </motion.a>
+  ) : (
     <motion.button
       whileHover={{ y: -1 }}
       whileTap={{ scale: 0.99 }}
@@ -73,4 +70,10 @@ export function CommandButton({
       <span>{label}</span>
     </motion.button>
   )
+
+  if (solid) {
+    return <HoverCanvas speed={0.14}>{el}</HoverCanvas>
+  }
+
+  return el
 }

@@ -1,4 +1,6 @@
 import { Sliders, Music, BookOpen, Settings } from 'lucide-react'
+import { DitheredShadow } from '@/components/DitheredShadow'
+import { HoverCanvas } from '@/components/effects/HoverCanvas'
 import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 import { CommandSections } from '@/components/CommandSections'
 import { PageFrame } from '@/components/PageFrame'
@@ -52,7 +54,9 @@ export function SurfacesPage() {
         {surfaces.map((surface) => {
           const Icon = surface.icon
           return (
-            <div key={surface.code} className="border border-line bg-surface-elevated">
+            <DitheredShadow key={surface.code} preset="scan" offsetY={10} blur={20} opacity={0.35} pixelScale={3}>
+            <HoverCanvas>
+            <div className="border border-line bg-surface-elevated">
               <div className="flex items-center gap-3 border-b border-line px-4 py-3">
                 <Icon size={16} className="text-accent-cyan" />
                 <span className="font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-accent-cyan">{surface.code}</span>
@@ -75,9 +79,12 @@ export function SurfacesPage() {
                   program={surface.program}
                   theme="dark"
                   className="h-[140px] w-full"
+                  noShadow
                 />
               </div>
             </div>
+            </HoverCanvas>
+            </DitheredShadow>
           )
         })}
       </div>

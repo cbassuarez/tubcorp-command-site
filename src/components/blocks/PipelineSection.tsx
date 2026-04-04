@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { HoverCanvas } from '@/components/effects/HoverCanvas'
 import type { PipelineBlock } from '@/types/contracts'
 
 interface PipelineSectionProps {
@@ -40,12 +41,14 @@ export function PipelineSection({ block }: PipelineSectionProps) {
                 <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center border border-line bg-surface-elevated font-mono text-sm font-bold text-accent-signal">
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <div className="flex-1 border border-line bg-surface-secondary/60 p-5">
-                  <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
-                    {step.label}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-txt-secondary">{step.body}</p>
-                </div>
+                <HoverCanvas className="flex-1">
+                  <div className="border border-line bg-surface-secondary/60 p-5">
+                    <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
+                      {step.label}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-txt-secondary">{step.body}</p>
+                  </div>
+                </HoverCanvas>
               </motion.div>
             ))}
           </div>

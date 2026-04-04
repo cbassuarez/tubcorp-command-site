@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CommandButton } from '@/components/CommandButton'
-import { HeerichStageCanvas } from '@/components/HeerichStageCanvas'
+import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 import { resolveActionHref } from '@/lib/actions'
 import type { SplitBlock, PageCommandAction } from '@/types/contracts'
 
@@ -23,7 +23,7 @@ export function SplitSection({ block }: SplitSectionProps) {
             transition={{ duration: 0.3 }}
             className="lg:[direction:ltr]"
           >
-            <HeerichStageCanvas intensity={0.55} className="h-[260px] w-full lg:h-[320px]" />
+            <AnimatedHeerichCanvas program="idle-drift" theme="light" className="h-[260px] w-full lg:h-[320px]" />
           </motion.div>
 
           <motion.div

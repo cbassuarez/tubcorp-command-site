@@ -1,35 +1,79 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 import { programs } from '@/components/heerich/programs'
+import { renderScene, fitCamera } from '@/lib/isoRenderer'
+import { DitheredShadow } from '@/components/DitheredShadow'
+import type { HeerichTheme } from '@/components/heerich/programs'
 
 interface AnimatedHeerichCanvasProps {
   program: string
-  theme?: 'light' | 'dark'
+  theme?: HeerichTheme
   className?: string
+  /** Disable the dithered shadow (default: enabled) */
+  noShadow?: boolean
 }
 
-export function AnimatedHeerichCanvas({ program, theme = 'light', className }: AnimatedHeerichCanvasProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const rafRef = useRef<number>(0)
-  const startRef = useRef<number>(0)
-  const lastFrameRef = useRef<number>(0)
+export function AnimatedHeerichCanvas({ program, theme = 'light', className, noShadow }: AnimatedHeerichCanvasProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const rafRef = useRef(0)
+  const startRef = useRef(0)
+  const lastFrameRef = useRef(0)
   const visibleRef = useRef(true)
+  const sizeRef = useRef({ w: 0, h: 0 })
 
   const prog = programs[program] ?? programs['idle-drift']
 
+  const paint = useCallback((elapsed: number) => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const { w, h } = sizeRef.current
+    if (!w || !h) return
+
+    const scene = prog.tick(elapsed, theme)
+    const cam = fitCamera(prog.gridW, prog.gridD, prog.maxZ, w, h)
+    renderScene(ctx, scene, cam, w, h)
+  }, [prog, theme])
+
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.innerHTML = prog.render(0, theme)
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    // Reset timing on program/theme change
+    startRef.current = 0
+    lastFrameRef.current = 0
+
+    // Size the canvas
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = window.devicePixelRatio || 1
+      const w = Math.round(rect.width * dpr)
+      const h = Math.round(rect.height * dpr)
+      if (w !== sizeRef.current.w || h !== sizeRef.current.h) {
+        canvas.width = w
+        canvas.height = h
+        sizeRef.current = { w, h }
+      }
     }
+
+    const resizeObs = new ResizeObserver(() => resize())
+    resizeObs.observe(canvas)
+    resize()
+
+    // Paint first frame immediately
+    paint(0)
+
+    const interval = 1000 / prog.fps
 
     function tick(now: number) {
       if (!startRef.current) startRef.current = now
 
       const elapsed = now - startRef.current
-      const interval = 1000 / prog.fps
 
-      if (now - lastFrameRef.current >= interval && visibleRef.current && containerRef.current) {
+      if (now - lastFrameRef.current >= interval && visibleRef.current) {
         lastFrameRef.current = now
-        containerRef.current.innerHTML = prog.render(elapsed, theme)
+        paint(elapsed)
       }
 
       rafRef.current = requestAnimationFrame(tick)
@@ -37,34 +81,42 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className }: A
 
     rafRef.current = requestAnimationFrame(tick)
 
-    const el = containerRef.current
-    if (!el) return () => cancelAnimationFrame(rafRef.current)
-
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        visibleRef.current = entry.isIntersecting
-      },
+      ([entry]) => { visibleRef.current = entry.isIntersecting },
       { threshold: 0.05 },
     )
-
-    observer.observe(el)
+    observer.observe(canvas)
 
     return () => {
       cancelAnimationFrame(rafRef.current)
+      resizeObs.disconnect()
       observer.disconnect()
     }
-  }, [prog, theme])
+  }, [prog, theme, paint])
 
-  return (
-    <div
-      ref={containerRef}
+  const canvas = (
+    <canvas
+      ref={canvasRef}
       className={[
         'pointer-events-none overflow-hidden border border-line bg-surface-elevated',
-        className ?? '',
-      ]
-        .join(' ')
-        .trim()}
+        noShadow ? className ?? '' : 'w-full h-full',
+      ].join(' ').trim()}
       aria-hidden
     />
+  )
+
+  if (noShadow) return canvas
+
+  return (
+    <DitheredShadow
+      preset={theme === 'dark' ? 'terminal' : 'signal'}
+      offsetY={14}
+      blur={28}
+      opacity={theme === 'dark' ? 0.6 : 0.4}
+      pixelScale={3}
+      className={className}
+    >
+      {canvas}
+    </DitheredShadow>
   )
 }

@@ -1,21 +1,20 @@
-import { useMemo } from 'react'
-import { renderHeerichStage } from '@/lib/heerichAdapter'
+import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 
 interface HeerichStageCanvasProps {
   intensity: number
   className?: string
 }
 
-export function HeerichStageCanvas({ intensity, className }: HeerichStageCanvasProps) {
-  const markup = useMemo(() => renderHeerichStage(intensity), [intensity])
-
+/**
+ * Static-looking heerich visualization. Uses idle-drift at low fps
+ * so it has subtle life without being distracting.
+ */
+export function HeerichStageCanvas({ className }: HeerichStageCanvasProps) {
   return (
-    <div
-      className={['pointer-events-none overflow-hidden border border-line bg-surface-elevated', className ?? '']
-        .join(' ')
-        .trim()}
-      aria-hidden
-      dangerouslySetInnerHTML={{ __html: markup }}
+    <AnimatedHeerichCanvas
+      program="idle-drift"
+      theme="light"
+      className={className}
     />
   )
 }

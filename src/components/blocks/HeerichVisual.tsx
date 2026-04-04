@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { HeerichStageCanvas } from '@/components/HeerichStageCanvas'
+import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 import type { HeerichBlock } from '@/types/contracts'
 
 interface HeerichVisualProps {
@@ -16,8 +16,9 @@ export function HeerichVisual({ block }: HeerichVisualProps) {
         transition={{ duration: 0.4 }}
         className="mx-auto max-w-[1420px] px-4 lg:px-8"
       >
-        <HeerichStageCanvas
-          intensity={0.5}
+        <AnimatedHeerichCanvas
+          program={block.program}
+          theme="light"
           className={block.height ? `w-full ${block.height}` : 'h-[240px] w-full lg:h-[320px]'}
         />
         {block.caption && (

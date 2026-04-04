@@ -231,6 +231,72 @@ void main() {
 }
 `
 
+// ─── Tier 6: Per-Element Hover ───
+
+export const HOVER_FS = /* glsl */ `#version 300 es
+precision highp float;
+
+uniform sampler2D uContent;
+uniform float uTime;
+uniform vec2 uResolution;
+uniform vec2 uMouse;   // normalised 0-1 within element
+uniform float uHover;  // 0-1 intensity (smoothly lerped)
+
+in vec2 vUV;
+out vec4 fragColor;
+
+void main() {
+  vec2 uv = vec2(vUV.x, 1.0 - vUV.y);
+
+  // Fast exit when idle
+  if (uHover < 0.005) {
+    fragColor = texture(uContent, uv);
+    return;
+  }
+
+  vec2 mouse = vec2(uMouse.x, 1.0 - uMouse.y);
+  vec2 diff = uv - mouse;
+  float dist = length(diff);
+  vec2 dir = normalize(diff + 0.0001);
+
+  // ── 1. Chromatic dispersion radiating from cursor ──
+  //    RGB channels split outward like a prism held at the pointer
+  float aberr = uHover * 0.010 * smoothstep(0.45, 0.0, dist);
+  vec2 ao = dir * aberr;
+  float r = texture(uContent, uv + ao).r;
+  float g = texture(uContent, uv).g;
+  float b = texture(uContent, uv - ao).b;
+  vec3 color = vec3(r, g, b);
+
+  // ── 2. Lens warp — subtle magnification near cursor ──
+  float lens = uHover * 0.018 * exp(-dist * 8.0);
+  vec2 lensUV = uv + diff * lens;
+  vec3 lensCol = texture(uContent, lensUV).rgb;
+  color = mix(color, lensCol, 0.35 * uHover);
+
+  // ── 3. Scan-line reveal — faint CRT lines materialise near pointer ──
+  float proximity = smoothstep(0.35, 0.0, dist) * uHover;
+  float scanLine = 0.5 + 0.5 * sin(gl_FragCoord.y * 2.8 + uTime * 2.4);
+  color *= 1.0 - proximity * 0.07 * scanLine;
+
+  // ── 4. Phosphor edge glow — border lights up on hover ──
+  float edgeDist = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
+  float edgeGlow = uHover * smoothstep(0.025, 0.0, edgeDist) * 0.55;
+  color += vec3(0.06, 0.32, 0.14) * edgeGlow;
+
+  // ── 5. Cursor spotlight — soft brightness lift ──
+  float lift = uHover * 0.09 * exp(-dist * 5.5);
+  color += lift;
+
+  // ── 6. Refocus vignette — edges dim to draw the eye ──
+  float vig = 1.0 - uHover * 0.15 * dot(uv - 0.5, uv - 0.5) * 2.0;
+  color *= clamp(vig, 0.82, 1.0);
+
+  float a = texture(uContent, uv).a;
+  fragColor = vec4(color, a);
+}
+`
+
 // ─── Passthrough (for inactive states) ───
 
 export const PASSTHROUGH_FS = /* glsl */ `#version 300 es

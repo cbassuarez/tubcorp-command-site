@@ -1,361 +1,381 @@
-import { Heerich } from 'heerich-runtime'
+import type { IsoScene, Voxel } from '@/lib/isoRenderer'
 
 export type HeerichTheme = 'light' | 'dark'
 
 export interface HeerichProgram {
   id: string
   fps: number
-  render: (elapsed: number, theme: HeerichTheme) => string
+  gridW: number
+  gridD: number
+  maxZ: number
+  tick: (elapsed: number, theme: HeerichTheme) => IsoScene
 }
+
+// ── Palettes ──
 
 const PALETTES = {
   light: {
-    baseFill: '#f0f0f0',
-    baseStroke: 'rgba(0,0,0,0.12)',
-    baseTop: '#fafafa',
-    voxelFill: '#e4e4e4',
-    voxelStroke: 'rgba(0,0,0,0.10)',
-    voxelTop: '#eeeeee',
-    activeTop: '#0a9f45',
-    activeFill: '#c8e6d4',
-    cageLine: 'rgba(10,159,69,0.18)',
-    subtle: '#d8d8d8',
+    baseFill: '#e8e8e8', baseStroke: '#d0d0d0', baseTop: '#f2f2f2',
+    voxFill: '#d4d4d4', voxStroke: '#c0c0c0', voxTop: '#e0e0e0',
+    actFill: '#a8dbb8', actStroke: '#6bc88d', actTop: '#0a9f45',
+    hiTop: '#06803a', hiFill: '#7fd4a0',
+    dimFill: '#dcdcdc', dimTop: '#cccccc',
   },
   dark: {
-    baseFill: '#1a1a1a',
-    baseStroke: 'rgba(255,255,255,0.08)',
-    baseTop: '#222222',
-    voxelFill: '#252525',
-    voxelStroke: 'rgba(255,255,255,0.06)',
-    voxelTop: '#2a2a2a',
-    activeTop: '#2ea35f',
-    activeFill: '#1a3326',
-    cageLine: 'rgba(46,163,95,0.22)',
-    subtle: '#333333',
+    baseFill: '#1a1a1a', baseStroke: '#2a2a2a', baseTop: '#222222',
+    voxFill: '#282828', voxStroke: '#333333', voxTop: '#303030',
+    actFill: '#1a3326', actStroke: '#2a5940', actTop: '#2ea35f',
+    hiTop: '#3ddb7a', hiFill: '#1f4a33',
+    dimFill: '#222222', dimTop: '#282828',
   },
 } as const
 
-function p(theme: HeerichTheme) {
-  return PALETTES[theme]
+function pal(theme: HeerichTheme) { return PALETTES[theme] }
+
+// ── Utility ──
+
+function smoothstep(edge0: number, edge1: number, x: number): number {
+  const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)))
+  return t * t * (3 - 2 * t)
 }
 
-function safeRender(fn: () => string): string {
-  try {
-    return fn()
-  } catch {
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" style="width:100%;height:100%"><rect x="24" y="24" width="152" height="152" fill="currentColor" opacity="0.05" stroke="currentColor" stroke-opacity="0.15" stroke-width="2"/></svg>'
-  }
+// ═══════════════════════════════════════════════════════════
+// PROGRAM: homeHero — large dramatic landscape for homepage
+// ═════════════��═════════════════════════════════════════════
+
+export const homeHero: HeerichProgram = {
+  id: 'home-hero',
+  fps: 24,
+  gridW: 20,
+  gridD: 20,
+  maxZ: 12,
+  tick(elapsed, theme) {
+    const c = pal(theme)
+    const t = elapsed / 1000
+    const voxels: Voxel[] = []
+
+    for (let x = 0; x < 20; x++) {
+      for (let y = 0; y < 20; y++) {
+        const dx = x - 9.5
+        const dy = y - 9.5
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        const angle = Math.atan2(dy, dx)
+
+        // Concentric ripple
+        const ripple = Math.sin(dist * 0.8 - t * 1.8) * 0.5 + 0.5
+        // Spiral twist
+        const spiral = Math.sin(angle * 3 + dist * 0.3 - t * 0.7) * 0.3 + 0.5
+        // Central tower
+        const center = Math.max(0, 1 - dist / 4)
+        const tower = center * (3 + 2 * Math.sin(t * 0.9))
+        // Combine
+        const raw = ripple * 2.5 + spiral * 1.5 + tower * 2
+        const h = Math.max(0.3, raw)
+
+        const intensity = Math.min(1, h / 6)
+        const isActive = intensity > 0.45
+
+        voxels.push({
+          x, y, z: 0, h,
+          fill: isActive ? c.actFill : c.voxFill,
+          top: intensity > 0.7 ? c.hiTop : isActive ? c.actTop : c.voxTop,
+          stroke: isActive ? c.actStroke : c.voxStroke,
+        })
+      }
+    }
+
+    return {
+      voxels,
+      base: { w: 20, d: 20, fill: c.baseFill, stroke: c.baseStroke, top: c.baseTop },
+    }
+  },
 }
 
-/**
- * Slow-breathing volume with radial concentric rings. Homepage hero.
- */
+// ═══════════════════════════════════════════════════════════
+// PROGRAM: heroPulse — breathing concentric rings + core
+// ═══════════════════���═══════════════════════════════════════
+
 export const heroPulse: HeerichProgram = {
   id: 'hero-pulse',
-  fps: 14,
-  render(elapsed: number, theme: HeerichTheme) {
-    return safeRender(() => {
-      const c = p(theme)
-      const t = elapsed / 1000
-      const breath = 0.35 + 0.3 * Math.sin(t * 0.4) + 0.1 * Math.sin(t * 0.17)
-      const clamped = Math.max(0, Math.min(1, breath))
-      const maxH = 9
-      const totalH = 1 + clamped * maxH
-      const whole = Math.max(1, Math.floor(totalH))
-      const frac = totalH - whole
+  fps: 20,
+  gridW: 14,
+  gridD: 14,
+  maxZ: 10,
+  tick(elapsed, theme) {
+    const c = pal(theme)
+    const t = elapsed / 1000
+    const breath = 0.3 + 0.35 * Math.sin(t * 0.5) + 0.15 * Math.sin(t * 0.23)
+    const voxels: Voxel[] = []
 
-      const engine = new Heerich({
-        tile: [16, 16, 12],
-        camera: { type: 'oblique', angle: 315, distance: 20 },
-      })
+    for (let x = 0; x < 14; x++) {
+      for (let y = 0; y < 14; y++) {
+        const dx = x - 6.5
+        const dy = y - 6.5
+        const dist = Math.sqrt(dx * dx + dy * dy)
 
-      // Base plate
-      engine.applyGeometry({
-        type: 'box', position: [0, 0, 0], size: [14, 14, 1],
-        style: { default: { fill: c.baseFill, stroke: c.baseStroke, 'stroke-width': 0.75 }, top: { fill: c.baseTop } },
-      })
+        // Three concentric rings
+        const ring1 = smoothstep(5.5, 6.5, dist) * smoothstep(7.0, 6.0, dist) // outer ring
+        const ring2 = smoothstep(3.0, 4.0, dist) * smoothstep(5.0, 4.0, dist) // mid ring
+        const core = smoothstep(3.0, 0, dist)                                   // core
 
-      engine.applyGeometry({ type: 'sphere', center: [7, 7, 1.5], radius: 3.2, mode: 'subtract' })
+        const ringH = ring1 * (1 + breath * 2)
+        const midH = ring2 * (2 + breath * 4)
+        const coreH = core * (3 + breath * 6)
+        const h = Math.max(ringH, midH, coreH)
 
-      // Outer ring — low, ambient
-      const ringH = Math.max(1, Math.round(1 + clamped * 2))
-      engine.applyGeometry({
-        type: 'box', position: [1, 1, 1], size: [12, 12, ringH],
-        style: { default: { fill: c.subtle, stroke: c.voxelStroke, strokeWidth: 0.5 }, top: { fill: clamped > 0.6 ? c.activeFill : c.voxelTop } },
-      })
-      // Cut inner void for ring effect
-      engine.applyGeometry({
-        type: 'box', position: [3, 3, 1], size: [8, 8, ringH + 1], mode: 'subtract',
-      })
+        if (h < 0.15) continue
 
-      // Mid ring
-      const midH = Math.max(1, Math.round(1 + clamped * 5))
-      engine.applyGeometry({
-        type: 'box', position: [3, 3, 1], size: [8, 8, midH],
-        style: { default: { fill: c.voxelFill, stroke: c.voxelStroke, strokeWidth: 0.6 }, top: { fill: clamped > 0.45 ? c.activeFill : c.voxelTop } },
-      })
-      engine.applyGeometry({
-        type: 'box', position: [5, 5, 1], size: [4, 4, midH + 1], mode: 'subtract',
-      })
+        const isCore = coreH > midH && coreH > ringH
+        const isMid = midH > ringH && !isCore
 
-      // Core volume
-      const hueShift = Math.sin(t * 0.12) * 8
-      engine.applyGeometry({
-        type: 'box', position: [5, 5, 1], size: [4, 4, whole],
-        style: {
-          default: (_x: number, _y: number, z: number) => {
-            const zN = Math.max(0, Math.min(1, (z - 1) / Math.max(1, maxH)))
-            const light = theme === 'dark' ? 0.22 + zN * 0.12 : 0.88 - zN * 0.18
-            const chroma = 0.03 + zN * 0.02
-            return { fill: `oklch(${light.toFixed(3)} ${chroma.toFixed(3)} ${(160 + hueShift).toFixed(0)})`, stroke: c.voxelStroke, strokeWidth: 0.6 }
-          },
-          top: { fill: clamped > 0.5 ? c.activeTop : c.voxelTop, stroke: c.voxelStroke, strokeWidth: 0.6 },
-        },
-      })
-
-      if (frac > 0.03) {
-        engine.applyGeometry({
-          type: 'box', position: [5, 5, 1 + whole], size: [4, 4, 1],
-          scale: [1, 1, Math.max(0.08, frac)], scaleOrigin: [0.5, 0.5, 0],
-          style: { default: { fill: c.voxelFill, stroke: c.voxelStroke, strokeWidth: 0.6 }, top: { fill: c.activeTop, stroke: c.voxelStroke, strokeWidth: 0.6 } },
+        voxels.push({
+          x, y, z: 0, h,
+          fill: isCore ? c.hiFill : isMid ? c.actFill : c.voxFill,
+          top: isCore ? c.hiTop : isMid ? c.actTop : c.voxTop,
+          stroke: isCore ? c.actStroke : c.voxStroke,
         })
       }
+    }
 
-      // Guidance cage
-      engine.applyGeometry({
-        type: 'box', position: [1, 1, 1], size: [12, 12, maxH + 2], opaque: false,
-        style: { default: { fill: 'none', stroke: c.cageLine, strokeWidth: 0.5, strokeDasharray: '3 1.5' } },
-      })
-
-      return engine.toSVG({ padding: 10 })
-    })
+    return {
+      voxels,
+      base: { w: 14, d: 14, fill: c.baseFill, stroke: c.baseStroke, top: c.baseTop },
+    }
   },
 }
 
-/**
- * Five sequential volumes lighting up in a flowing wave. Platform pipeline.
- */
+// ═══════════════════════════════════════════════════════════
+// PROGRAM: pipelineFlow — 5 stage columns with traveling pulse
+// ══════════════════════════════════════════════════════��════
+
 export const pipelineFlow: HeerichProgram = {
   id: 'pipeline-flow',
-  fps: 12,
-  render(elapsed: number, theme: HeerichTheme) {
-    return safeRender(() => {
-      const c = p(theme)
-      const t = elapsed / 1000
-      const phase = (t * 0.35) % 5
+  fps: 18,
+  gridW: 22,
+  gridD: 8,
+  maxZ: 9,
+  tick(elapsed, theme) {
+    const c = pal(theme)
+    const t = elapsed / 1000
+    const phase = (t * 0.6) % 7 - 1 // -1 to 6, so the pulse sweeps past all columns
+    const voxels: Voxel[] = []
 
-      const engine = new Heerich({
-        tile: [12, 12, 10],
-        camera: { type: 'oblique', angle: 315, distance: 28 },
-      })
+    const columns = [
+      { x: 1, label: 'CAP' },
+      { x: 5, label: 'ING' },
+      { x: 9, label: 'INF' },
+      { x: 13, label: 'STG' },
+      { x: 17, label: 'EMT' },
+    ]
 
-      // Base
-      engine.applyGeometry({
-        type: 'box', position: [0, 0, 0], size: [22, 8, 1],
-        style: { default: { fill: c.baseFill, stroke: c.baseStroke, 'stroke-width': 0.5 }, top: { fill: c.baseTop } },
-      })
+    columns.forEach((col, i) => {
+      const dist = Math.abs(phase - i)
+      const intensity = smoothstep(1.8, 0, dist)
+      const baseH = 1.5
+      const h = baseH + intensity * 7
 
-      const columns = [
-        { x: 1, label: 'CAPTURE' },
-        { x: 5, label: 'INGEST' },
-        { x: 9, label: 'INFER' },
-        { x: 13, label: 'STAGE' },
-        { x: 17, label: 'EMIT' },
-      ]
+      // Main column: 3×4 block
+      for (let dx = 0; dx < 3; dx++) {
+        for (let dy = 0; dy < 4; dy++) {
+          // Slight height variation within column
+          const edge = (dx === 0 || dx === 2 || dy === 0 || dy === 3) ? 0.7 : 1
+          const vh = h * edge
 
-      columns.forEach((col, i) => {
-        const dist = Math.abs(phase - i)
-        const intensity = Math.max(0, 1 - dist * 0.45)
-        const h = Math.max(1, Math.round(1 + intensity * 7))
-        const active = intensity > 0.35
-
-        engine.applyGeometry({
-          type: 'box', position: [col.x, 2, 1], size: [3, 4, h],
-          style: {
-            default: { fill: active ? c.activeFill : c.voxelFill, stroke: c.voxelStroke, strokeWidth: 0.5 },
-            top: { fill: active ? c.activeTop : c.voxelTop },
-          },
-        })
-
-        // Connector bar between columns
-        if (i < columns.length - 1) {
-          const connH = Math.max(1, Math.round(intensity * 2))
-          engine.applyGeometry({
-            type: 'box', position: [col.x + 3, 3, 1], size: [1, 2, connH],
-            style: { default: { fill: c.subtle, stroke: c.voxelStroke, strokeWidth: 0.4 }, top: { fill: active ? c.activeFill : c.subtle } },
+          voxels.push({
+            x: col.x + dx, y: 2 + dy, z: 0, h: vh,
+            fill: intensity > 0.3 ? c.actFill : c.voxFill,
+            top: intensity > 0.6 ? c.hiTop : intensity > 0.3 ? c.actTop : c.voxTop,
+            stroke: intensity > 0.3 ? c.actStroke : c.voxStroke,
           })
         }
-      })
+      }
 
-      return engine.toSVG({ padding: 10 })
+      // Connector bars between columns
+      if (i < columns.length - 1) {
+        const connIntensity = smoothstep(2.0, 0, Math.abs(phase - (i + 0.5)))
+        for (let dx = 0; dx < 2; dx++) {
+          voxels.push({
+            x: col.x + 3 + dx, y: 3, z: 0,
+            h: 0.8 + connIntensity * 1.5,
+            fill: connIntensity > 0.3 ? c.actFill : c.dimFill,
+            top: connIntensity > 0.3 ? c.actTop : c.dimTop,
+            stroke: c.voxStroke,
+          })
+          voxels.push({
+            x: col.x + 3 + dx, y: 4, z: 0,
+            h: 0.8 + connIntensity * 1.5,
+            fill: connIntensity > 0.3 ? c.actFill : c.dimFill,
+            top: connIntensity > 0.3 ? c.actTop : c.dimTop,
+            stroke: c.voxStroke,
+          })
+        }
+      }
     })
+
+    return {
+      voxels,
+      base: { w: 22, d: 8, fill: c.baseFill, stroke: c.baseStroke, top: c.baseTop },
+    }
   },
 }
 
-/**
- * Vertical bars shifting like an audio visualizer with depth rows. Harness page.
- */
+// ═══════════════════════════��═══════════════════════════════
+// PROGRAM: signalCascade — EQ-style oscillating bars
+// ═��══════════════════════════════════════════════════���══════
+
 export const signalCascade: HeerichProgram = {
   id: 'signal-cascade',
-  fps: 14,
-  render(elapsed: number, theme: HeerichTheme) {
-    return safeRender(() => {
-      const c = p(theme)
-      const t = elapsed / 1000
+  fps: 24,
+  gridW: 18,
+  gridD: 7,
+  maxZ: 9,
+  tick(elapsed, theme) {
+    const c = pal(theme)
+    const t = elapsed / 1000
+    const voxels: Voxel[] = []
 
-      const engine = new Heerich({
-        tile: [12, 12, 10],
-        camera: { type: 'oblique', angle: 315, distance: 24 },
-      })
+    for (let i = 0; i < 16; i++) {
+      // Multiple sine waves for complex motion
+      const f1 = Math.sin(t * 1.2 + i * 0.4)
+      const f2 = Math.sin(t * 0.7 + i * 0.65) * 0.6
+      const f3 = Math.sin(t * 2.1 + i * 0.25) * 0.3
+      const raw = (f1 + f2 + f3) * 0.5 + 0.5
+      const h = 0.5 + raw * 7
+      const active = h > 4
 
-      // Base
-      engine.applyGeometry({
-        type: 'box', position: [0, 0, 0], size: [18, 8, 1],
-        style: { default: { fill: c.baseFill, stroke: c.baseStroke, 'stroke-width': 0.5 }, top: { fill: c.baseTop } },
-      })
-
-      for (let i = 0; i < 16; i++) {
-        const freq = 0.35 + i * 0.06
-        const ph = i * 0.7
-        const raw = 0.5 + 0.5 * Math.sin(t * freq + ph)
-        const h = Math.max(1, Math.round(1 + 6 * raw))
-        const active = h > 3
-
-        // Front row
-        engine.applyGeometry({
-          type: 'box', position: [1 + i, 2, 1], size: [1, 3, h],
-          style: {
-            default: { fill: active ? c.activeFill : c.voxelFill, stroke: c.voxelStroke, strokeWidth: 0.4 },
-            top: { fill: active ? c.activeTop : c.voxelTop },
-          },
-        })
-
-        // Back row (lower echo)
-        const bh = Math.max(1, Math.round(h * 0.5))
-        engine.applyGeometry({
-          type: 'box', position: [1 + i, 5, 1], size: [1, 2, bh],
-          style: {
-            default: { fill: c.subtle, stroke: c.voxelStroke, strokeWidth: 0.3 },
-            top: { fill: active ? c.activeFill : c.subtle },
-          },
+      // Front bar (2 deep)
+      for (let dy = 0; dy < 2; dy++) {
+        voxels.push({
+          x: 1 + i, y: 1 + dy, z: 0, h,
+          fill: active ? c.actFill : c.voxFill,
+          top: h > 6 ? c.hiTop : active ? c.actTop : c.voxTop,
+          stroke: active ? c.actStroke : c.voxStroke,
         })
       }
 
-      return engine.toSVG({ padding: 8 })
-    })
+      // Back echo bar (quieter)
+      const bh = Math.max(0.3, h * 0.35)
+      for (let dy = 0; dy < 2; dy++) {
+        voxels.push({
+          x: 1 + i, y: 4 + dy, z: 0, h: bh,
+          fill: c.dimFill,
+          top: active ? c.actFill : c.dimTop,
+          stroke: c.voxStroke,
+          opacity: 0.7,
+        })
+      }
+    }
+
+    return {
+      voxels,
+      base: { w: 18, d: 7, fill: c.baseFill, stroke: c.baseStroke, top: c.baseTop },
+    }
   },
 }
 
-/**
- * Perlin-like surface drift. Ambient fallback.
- */
+// ════════════��══════════════════════════════════════════════
+// PROGRAM: idleDrift — surface wave over a grid of pillars
+// ══════════════════���════════════════════════════════════════
+
 export const idleDrift: HeerichProgram = {
   id: 'idle-drift',
-  fps: 10,
-  render(elapsed: number, theme: HeerichTheme) {
-    return safeRender(() => {
-      const c = p(theme)
-      const t = elapsed / 1000
+  fps: 16,
+  gridW: 10,
+  gridD: 10,
+  maxZ: 6,
+  tick(elapsed, theme) {
+    const c = pal(theme)
+    const t = elapsed / 1000
+    const voxels: Voxel[] = []
 
-      const engine = new Heerich({
-        tile: [16, 16, 12],
-        camera: { type: 'oblique', angle: 315, distance: 22 },
-      })
+    for (let x = 0; x < 10; x++) {
+      for (let y = 0; y < 10; y++) {
+        const dx = x - 4.5
+        const dy = y - 4.5
+        const dist = Math.sqrt(dx * dx + dy * dy)
 
-      // Base plate
-      engine.applyGeometry({
-        type: 'box', position: [0, 0, 0], size: [10, 10, 1],
-        style: { default: { fill: c.baseFill, stroke: c.baseStroke, 'stroke-width': 0.6 }, top: { fill: c.baseTop } },
-      })
+        // Slow radial wave + diagonal ripple
+        const wave = Math.sin(t * 0.45 + dist * 0.7) * 0.5 + 0.5
+        const diag = Math.sin(t * 0.25 + (x + y) * 0.5) * 0.3
+        const h = 0.4 + (wave + diag) * 3.5
+        const active = wave > 0.55
 
-      // 8x8 grid of individual pillars with wave heights
-      for (let x = 1; x < 9; x++) {
-        for (let y = 1; y < 9; y++) {
-          const dx = x - 4.5
-          const dy = y - 4.5
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          const wave = Math.sin(t * 0.3 + dist * 0.6) * 0.5 + 0.5
-          const secondary = Math.sin(t * 0.18 + x * 0.4 + y * 0.5) * 0.3
-          const h = Math.max(1, Math.round(1 + (wave + secondary) * 3))
-          const active = wave > 0.6
-
-          engine.applyGeometry({
-            type: 'box', position: [x, y, 1], size: [1, 1, h],
-            style: {
-              default: { fill: active ? c.activeFill : c.voxelFill, stroke: c.voxelStroke, strokeWidth: 0.4 },
-              top: { fill: active ? c.activeTop : c.voxelTop },
-            },
-          })
-        }
+        voxels.push({
+          x, y, z: 0, h,
+          fill: active ? c.actFill : c.voxFill,
+          top: active ? c.actTop : c.voxTop,
+          stroke: active ? c.actStroke : c.voxStroke,
+        })
       }
+    }
 
-      return engine.toSVG({ padding: 10 })
-    })
+    return {
+      voxels,
+      base: { w: 10, d: 10, fill: c.baseFill, stroke: c.baseStroke, top: c.baseTop },
+    }
   },
 }
 
-/**
- * Dramatic pulsing sphere with expanding ring. Physical entry page.
- */
+// ════���══════════════════════════════════════════════════════
+// PROGRAM: entryInduction — expanding/contracting radial burst
+// ═══════════════════���═══════════════════════════════════��═══
+
 export const entryInduction: HeerichProgram = {
   id: 'entry-induction',
-  fps: 14,
-  render(elapsed: number, theme: HeerichTheme) {
-    return safeRender(() => {
-      const c = p(theme)
-      const t = elapsed / 1000
-      const pulse = 0.4 + 0.6 * Math.pow(Math.sin(t * 0.8) * 0.5 + 0.5, 1.5)
-      const radius = 2 + pulse * 4
+  fps: 20,
+  gridW: 14,
+  gridD: 14,
+  maxZ: 12,
+  tick(elapsed, theme) {
+    const c = pal(theme)
+    const t = elapsed / 1000
+    const pulse = Math.pow(Math.sin(t * 0.8) * 0.5 + 0.5, 1.3)
+    const voxels: Voxel[] = []
 
-      const engine = new Heerich({
-        tile: [14, 14, 12],
-        camera: { type: 'oblique', angle: 315, distance: 20 },
-      })
+    for (let x = 0; x < 14; x++) {
+      for (let y = 0; y < 14; y++) {
+        const dx = x - 6.5
+        const dy = y - 6.5
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        const angle = Math.atan2(dy, dx)
 
-      // Base ring that expands with pulse
-      const ringR = Math.round(3 + pulse * 2)
-      engine.applyGeometry({
-        type: 'box', position: [6 - ringR, 6 - ringR, 0], size: [ringR * 2, ringR * 2, 1],
-        style: { default: { fill: c.baseFill, stroke: c.baseStroke, strokeWidth: 0.5 }, top: { fill: c.baseTop } },
-      })
+        // Radial burst — expanding ring
+        const ringRadius = 2 + pulse * 4
+        const ringDist = Math.abs(dist - ringRadius)
+        const ring = Math.max(0, 1 - ringDist / 1.5)
 
-      // Core sphere
-      engine.applyGeometry({
-        type: 'sphere', center: [6, 6, 5], radius: Math.round(radius),
-        style: {
-          default: {
-            fill: pulse > 0.7 ? c.activeTop : c.activeFill,
-            stroke: c.cageLine,
-            strokeWidth: 0.7,
-          },
-        },
-      })
+        // Central mass
+        const center = Math.max(0, 1 - dist / 3) * (1 + pulse * 2)
 
-      // Orbiting small volumes
-      for (let i = 0; i < 4; i++) {
-        const angle = (t * 0.5 + i * Math.PI / 2)
-        const ox = Math.round(6 + Math.cos(angle) * 4)
-        const oy = Math.round(6 + Math.sin(angle) * 4)
-        if (ox >= 0 && ox <= 11 && oy >= 0 && oy <= 11) {
-          engine.applyGeometry({
-            type: 'box', position: [ox, oy, 2], size: [1, 1, Math.round(1 + pulse * 2)],
-            style: { default: { fill: c.activeFill, stroke: c.cageLine, strokeWidth: 0.5 }, top: { fill: c.activeTop } },
-          })
-        }
+        // Angular spokes (4-fold symmetry)
+        const spoke = Math.pow(Math.cos(angle * 4 + t * 0.3), 8) * Math.max(0, 1 - dist / 7)
+
+        const h = Math.max(ring * 5, center * 8, spoke * 3)
+        if (h < 0.2) continue
+
+        const isCenter = center * 8 > ring * 5 && center * 8 > spoke * 3
+        const isRing = ring * 5 > spoke * 3 && !isCenter
+
+        voxels.push({
+          x, y, z: 0, h,
+          fill: isCenter ? c.hiFill : isRing ? c.actFill : c.voxFill,
+          top: isCenter ? c.hiTop : isRing ? c.actTop : c.voxTop,
+          stroke: isCenter || isRing ? c.actStroke : c.voxStroke,
+        })
       }
+    }
 
-      // Cage
-      engine.applyGeometry({
-        type: 'box', position: [0, 0, 0], size: [12, 12, 12], opaque: false,
-        style: { default: { fill: 'none', stroke: c.cageLine, strokeWidth: 0.4, strokeDasharray: '2 2' } },
-      })
-
-      return engine.toSVG({ padding: 10 })
-    })
+    return {
+      voxels,
+      base: { w: 14, d: 14, fill: c.baseFill, stroke: c.baseStroke, top: c.baseTop },
+    }
   },
 }
 
+// ── Export map ──
+
 export const programs: Record<string, HeerichProgram> = {
+  'home-hero': homeHero,
   'hero-pulse': heroPulse,
   'pipeline-flow': pipelineFlow,
   'signal-cascade': signalCascade,
