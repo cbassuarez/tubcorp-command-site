@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect } from 'react'
 import { programs } from '@/components/heerich/programs'
 
 interface AnimatedHeerichCanvasProps {
@@ -15,8 +15,13 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
 
   const prog = programs[program] ?? programs['idle-drift']
 
-  const animate = useCallback(
-    (now: number) => {
+  useEffect(() => {
+    // Render initial frame immediately
+    if (containerRef.current) {
+      containerRef.current.innerHTML = prog.render(0)
+    }
+
+    function tick(now: number) {
       if (!startRef.current) startRef.current = now
 
       const elapsed = now - startRef.current
@@ -27,18 +32,10 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
         containerRef.current.innerHTML = prog.render(elapsed)
       }
 
-      rafRef.current = requestAnimationFrame(animate)
-    },
-    [prog],
-  )
-
-  useEffect(() => {
-    // Render initial frame immediately
-    if (containerRef.current) {
-      containerRef.current.innerHTML = prog.render(0)
+      rafRef.current = requestAnimationFrame(tick)
     }
 
-    rafRef.current = requestAnimationFrame(animate)
+    rafRef.current = requestAnimationFrame(tick)
 
     // IntersectionObserver to pause when off-screen
     const el = containerRef.current
@@ -57,7 +54,7 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
       cancelAnimationFrame(rafRef.current)
       observer.disconnect()
     }
-  }, [animate, prog])
+  }, [prog])
 
   return (
     <div

@@ -8,13 +8,9 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
 
 // Mock IntersectionObserver for framer-motion whileInView
 class MockIntersectionObserver {
-  observe = vi.fn()
-  unobserve = vi.fn()
-  disconnect = vi.fn()
-  constructor(
-    _callback: IntersectionObserverCallback,
-    _options?: IntersectionObserverInit,
-  ) {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
 }
 
 Object.defineProperty(window, 'IntersectionObserver', {
