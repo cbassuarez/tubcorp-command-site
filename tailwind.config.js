@@ -4,18 +4,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        stage: {
-          black: '#f5f0e4',
-          line: '#d8cfbc',
-          text: '#1c1a16',
-          muted: '#736c5d',
-          signal: '#0a9f45',
-          cyan: '#0b7480',
-          amber: '#9b6a00',
-          alert: '#b1283f',
-          dark: '#1c1a16',
-          'dark-surface': '#2a2620',
-          'dark-line': '#3d382f',
+        surface: {
+          primary: 'var(--surface-primary)',
+          secondary: 'var(--surface-secondary)',
+          elevated: 'var(--surface-elevated)',
+          overlay: 'var(--surface-overlay)',
+        },
+        line: {
+          DEFAULT: 'var(--border-primary)',
+          subtle: 'var(--border-subtle)',
+        },
+        txt: {
+          DEFAULT: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+        },
+        accent: {
+          signal: 'var(--accent-signal)',
+          cyan: 'var(--accent-cyan)',
+          amber: 'var(--accent-amber)',
+          alert: 'var(--accent-alert)',
         },
       },
       fontFamily: {

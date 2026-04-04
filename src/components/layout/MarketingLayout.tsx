@@ -8,7 +8,7 @@ export function MarketingLayout() {
   const outlet = useOutlet()
 
   return (
-    <div className="min-h-screen bg-stage-black text-stage-text">
+    <div data-theme="light" className="min-h-screen bg-surface-primary text-txt">
       <TopNav />
 
       <main className="pt-14">

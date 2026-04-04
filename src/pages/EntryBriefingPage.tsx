@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
-import { FunkyShadow } from 'funky-shadow'
+import { Activity, Radio, Shield } from 'lucide-react'
 import { CommandSections } from '@/components/CommandSections'
-import { HeerichStageCanvas } from '@/components/HeerichStageCanvas'
+import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 import { PageFrame } from '@/components/PageFrame'
+import { StatusChip } from '@/components/StatusChip'
 import { pageSpecs } from '@/content/siteContent'
 import { useTelemetryContext } from '@/app/TelemetryContext'
 
@@ -12,45 +13,73 @@ export function EntryBriefingPage() {
 
   return (
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
-      <div className="relative space-y-4 overflow-hidden border border-stage-signal/35 bg-[#efe7d6]/85 p-4 sm:p-6">
-        <div className="border border-[#d2c8b3] bg-[#f5efdf]/92 p-3">
-          <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-stage-cyan/90">
-            Live Volumetric Briefing Feed
+      <div className="space-y-4">
+        {/* Hero heerich with classification banner */}
+        <div className="relative overflow-hidden border border-accent-signal/30 bg-surface-elevated p-4 sm:p-6">
+          <motion.div
+            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-accent-signal/60"
+            animate={{ opacity: [0.2, 1, 0.2] }}
+            transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+          />
+          <p className="mb-3 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-accent-signal">
+            Classified // Operator Briefing // {telemetry.state.source} Source
           </p>
-          <HeerichStageCanvas className="h-[220px] w-full" intensity={telemetry.snapshot.intensity} />
+          <AnimatedHeerichCanvas
+            program="hero-pulse"
+            theme="dark"
+            className="h-[240px] w-full sm:h-[280px]"
+          />
         </div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-[48%] bg-gradient-to-l from-stage-signal/15 to-transparent" />
-        <FunkyShadow
-          width={680}
-          height={120}
-          radius={0}
-          preset="sunset-strip"
-          dither="8x8"
-          spread={75}
-          pixelScale={2}
-          opacity={0.35}
-          className="w-full"
-        >
-          <div className="relative border border-[#d2c8b3] bg-[#f5efdf]/95 px-4 py-6 sm:px-6">
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-[42%] bg-gradient-to-l from-[#dbcfae]/35 to-transparent" />
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-stage-cyan/90">
-              Public Sector Deployment Portal
-            </p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-[0.02em] text-[#1f1b15] sm:text-5xl">
-              Download the Tub Companion
-            </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed tracking-[0.01em] text-[#4a4336]">
-              Provision field operators in minutes. The companion app connects controlled public input to the live stage
-              pipeline with policy-aligned telemetry. Source mode: {telemetry.state.source}.
+
+        {/* Three-column status panels */}
+        <div className="grid gap-3 md:grid-cols-3">
+          <div className="space-y-3 border border-line bg-surface-elevated p-4">
+            <div className="flex items-center gap-2">
+              <Activity size={14} className="text-accent-signal" />
+              <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-txt-muted">Mission Status</h3>
+            </div>
+            <StatusChip title="LINK" value={telemetry.state.link} active={telemetry.state.link !== 'MISSING'} accent="signal" />
+            <StatusChip title="FEED" value={telemetry.state.freshness} active={telemetry.state.freshness !== 'STANDBY'} accent="cyan" />
+          </div>
+
+          <div className="space-y-3 border border-line bg-surface-elevated p-4">
+            <div className="flex items-center gap-2">
+              <Radio size={14} className="text-accent-cyan" />
+              <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-txt-muted">Operational Posture</h3>
+            </div>
+            <StatusChip title="MODE" value={telemetry.state.mode} active accent="cyan" />
+            <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-txt-muted">
+              Scene: {telemetry.snapshot.scene} // Intensity: {(telemetry.snapshot.intensity * 100).toFixed(0)}%
             </p>
           </div>
-        </FunkyShadow>
-        <motion.div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-stage-signal/70"
-          animate={{ opacity: [0.2, 1, 0.2] }}
-          transition={{ duration: 1.8, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
-        />
+
+          <div className="space-y-3 border border-line bg-surface-elevated p-4">
+            <div className="flex items-center gap-2">
+              <Shield size={14} className="text-accent-amber" />
+              <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-txt-muted">Deployment Readiness</h3>
+            </div>
+            <StatusChip title="ACCESS" value={telemetry.state.access} active={telemetry.state.access === 'OPEN'} accent={telemetry.state.access === 'OPEN' ? 'signal' : 'amber'} />
+            <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-txt-muted">
+              Companion deployment required for field participation.
+            </p>
+          </div>
+        </div>
+
+        {/* Scrolling signal log */}
+        <div className="border border-line bg-surface-secondary p-3">
+          <p className="mb-2 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-accent-cyan">
+            Signal Log
+          </p>
+          <div className="max-h-[120px] space-y-1 overflow-y-auto">
+            {telemetry.logLines.slice(0, 12).map((line) => (
+              <p key={line} className="font-mono text-[10px] tracking-[0.06em] text-txt-muted">
+                {line}
+              </p>
+            ))}
+          </div>
+        </div>
       </div>
+
       <CommandSections spec={spec} />
     </PageFrame>
   )

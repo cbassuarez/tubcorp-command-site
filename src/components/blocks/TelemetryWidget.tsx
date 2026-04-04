@@ -26,12 +26,12 @@ export function TelemetryWidget({ block }: TelemetryWidgetProps) {
         className="mx-auto max-w-[1420px] px-4 lg:px-8"
       >
         {block.title && (
-          <h2 className="mb-6 text-2xl font-semibold tracking-[0.02em] text-[#1f1b15]">
+          <h2 className="mb-6 text-2xl font-semibold tracking-[0.02em] text-txt">
             {block.title}
           </h2>
         )}
 
-        <div className="inline-flex gap-3 border border-[#d2c8b3] bg-[#efe6d5]/60 p-4">
+        <div className="inline-flex gap-3 border border-line bg-surface-secondary/60 p-4">
           <StatusChip
             title="LINK"
             value={state.link}

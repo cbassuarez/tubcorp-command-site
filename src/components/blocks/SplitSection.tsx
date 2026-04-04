@@ -34,18 +34,18 @@ export function SplitSection({ block }: SplitSectionProps) {
             className="lg:[direction:ltr]"
           >
             {block.eyebrow && (
-              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-stage-cyan">
+              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent-cyan">
                 {block.eyebrow}
               </p>
             )}
 
             {block.title && (
-              <h2 className="text-2xl font-semibold tracking-[0.02em] text-[#1f1b15]">
+              <h2 className="text-2xl font-semibold tracking-[0.02em] text-txt">
                 {block.title}
               </h2>
             )}
 
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-[#534b3f]">
+            <div className="mt-4 space-y-3 text-sm leading-relaxed text-txt-secondary">
               {block.body.split('\n\n').map((p, i) => (
                 <p key={i}>{p}</p>
               ))}

@@ -1,6 +1,8 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
 import App from '@/app/App'
+
+afterEach(cleanup)
 
 describe('app shell', () => {
   it('renders homepage hero on root route', async () => {
@@ -15,6 +17,7 @@ describe('app shell', () => {
   it('renders operator portal on /operators route', async () => {
     window.history.pushState({}, '', '/operators')
     render(<App />)
-    expect(await screen.findByText('LINK')).toBeInTheDocument()
+    const links = await screen.findAllByText('LINK')
+    expect(links.length).toBeGreaterThan(0)
   })
 })

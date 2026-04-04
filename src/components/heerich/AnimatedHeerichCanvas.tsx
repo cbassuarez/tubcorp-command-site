@@ -3,10 +3,11 @@ import { programs } from '@/components/heerich/programs'
 
 interface AnimatedHeerichCanvasProps {
   program: string
+  theme?: 'light' | 'dark'
   className?: string
 }
 
-export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCanvasProps) {
+export function AnimatedHeerichCanvas({ program, theme = 'light', className }: AnimatedHeerichCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number>(0)
   const startRef = useRef<number>(0)
@@ -16,9 +17,8 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
   const prog = programs[program] ?? programs['idle-drift']
 
   useEffect(() => {
-    // Render initial frame immediately
     if (containerRef.current) {
-      containerRef.current.innerHTML = prog.render(0)
+      containerRef.current.innerHTML = prog.render(0, theme)
     }
 
     function tick(now: number) {
@@ -29,7 +29,7 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
 
       if (now - lastFrameRef.current >= interval && visibleRef.current && containerRef.current) {
         lastFrameRef.current = now
-        containerRef.current.innerHTML = prog.render(elapsed)
+        containerRef.current.innerHTML = prog.render(elapsed, theme)
       }
 
       rafRef.current = requestAnimationFrame(tick)
@@ -37,7 +37,6 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
 
     rafRef.current = requestAnimationFrame(tick)
 
-    // IntersectionObserver to pause when off-screen
     const el = containerRef.current
     if (!el) return () => cancelAnimationFrame(rafRef.current)
 
@@ -54,13 +53,13 @@ export function AnimatedHeerichCanvas({ program, className }: AnimatedHeerichCan
       cancelAnimationFrame(rafRef.current)
       observer.disconnect()
     }
-  }, [prog])
+  }, [prog, theme])
 
   return (
     <div
       ref={containerRef}
       className={[
-        'pointer-events-none overflow-hidden border border-[#d2c8b3] bg-[#f5efdf]',
+        'pointer-events-none overflow-hidden border border-line bg-surface-elevated',
         className ?? '',
       ]
         .join(' ')

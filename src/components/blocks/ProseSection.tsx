@@ -18,20 +18,20 @@ export function ProseSection({ block }: ProseSectionProps) {
         className={`mx-auto max-w-[1420px] px-4 lg:px-8 ${centered ? 'text-center' : ''}`}
       >
         {block.eyebrow && (
-          <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-stage-cyan">
+          <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent-cyan">
             {block.eyebrow}
           </p>
         )}
 
         {block.title && (
-          <h2 className={`text-2xl font-semibold tracking-[0.02em] text-[#1f1b15] sm:text-3xl ${
+          <h2 className={`text-2xl font-semibold tracking-[0.02em] text-txt sm:text-3xl ${
             centered ? 'mx-auto max-w-2xl' : ''
           }`}>
             {block.title}
           </h2>
         )}
 
-        <div className={`mt-4 space-y-4 text-sm leading-relaxed text-[#534b3f] sm:text-base ${
+        <div className={`mt-4 space-y-4 text-sm leading-relaxed text-txt-secondary sm:text-base ${
           centered ? 'mx-auto max-w-2xl' : 'max-w-3xl'
         }`}>
           {block.body.split('\n\n').map((paragraph, i) => (

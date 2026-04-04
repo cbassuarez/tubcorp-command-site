@@ -21,7 +21,7 @@ export function HeerichVisual({ block }: HeerichVisualProps) {
           className={block.height ? `w-full ${block.height}` : 'h-[240px] w-full lg:h-[320px]'}
         />
         {block.caption && (
-          <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-[#8a8174]">
+          <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-txt-muted">
             {block.caption}
           </p>
         )}

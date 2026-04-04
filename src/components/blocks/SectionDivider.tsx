@@ -12,14 +12,14 @@ export function SectionDivider({ block }: SectionDividerProps) {
   if (block.variant === 'signal') {
     return (
       <div className="mx-auto max-w-[1420px] px-4 lg:px-8">
-        <div className="h-px bg-stage-signal/20" />
+        <div className="h-px bg-accent-signal/20" />
       </div>
     )
   }
 
   return (
     <div className="mx-auto max-w-[1420px] px-4 lg:px-8">
-      <div className="h-px bg-[#d2c8b3]" />
+      <div className="h-px bg-line" />
     </div>
   )
 }

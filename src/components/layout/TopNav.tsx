@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
-import { TubDitherSprite } from '@/components/TubDitherSprite'
+import { TubCorpWordmark } from '@/components/TubCorpWordmark'
 import { topNavigation, type NavItem } from '@/content/navigation'
 import { MobileMenu } from '@/components/layout/MobileMenu'
 
@@ -11,10 +11,10 @@ export function TopNav() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-[#d2c8b3] bg-[#f5efdf]/96 backdrop-blur-sm">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-surface-overlay backdrop-blur-sm">
         <div className="mx-auto flex h-14 max-w-[1420px] items-center justify-between px-4 lg:px-8">
           <Link to="/" className="flex items-center gap-2">
-            <TubDitherSprite />
+            <TubCorpWordmark />
           </Link>
 
           <NavBar key={location.pathname} />
@@ -22,7 +22,7 @@ export function TopNav() {
           <div className="flex items-center gap-3">
             <Link
               to="/download"
-              className="hidden rounded border border-stage-signal bg-stage-signal/10 px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-stage-signal transition-colors hover:bg-stage-signal/20 sm:block"
+              className="hidden rounded border border-accent-signal bg-accent-signal/10 px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent-signal transition-colors hover:bg-accent-signal/20 sm:block"
             >
               Download
             </Link>
@@ -95,8 +95,8 @@ function NavItemDesktop({
   const hasChildren = item.children && item.children.length > 0
 
   const linkClass = item.highlighted
-    ? 'rounded border border-stage-signal/40 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-stage-signal transition-colors hover:bg-stage-signal/10'
-    : 'px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[#5e5546] transition-colors hover:text-stage-text'
+    ? 'rounded border border-accent-signal/40 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-accent-signal transition-colors hover:bg-accent-signal/10'
+    : 'px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-txt-secondary transition-colors hover:text-txt'
 
   if (!hasChildren) {
     return (
@@ -119,7 +119,7 @@ function NavItemDesktop({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 top-full z-50 mt-1 min-w-[220px] border border-[#d2c8b3] bg-[#f5efdf] p-2 shadow-md"
+            className="absolute left-0 top-full z-50 mt-1 min-w-[220px] border border-line bg-surface-primary p-2 shadow-md"
           >
             {item.children!.map((child) => (
               <NavLink
@@ -128,8 +128,8 @@ function NavItemDesktop({
                 className={({ isActive }) =>
                   `block px-3 py-2 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors ${
                     isActive
-                      ? 'bg-stage-signal/10 text-stage-signal'
-                      : 'text-[#5e5546] hover:bg-[#eae2d1] hover:text-stage-text'
+                      ? 'bg-accent-signal/10 text-accent-signal'
+                      : 'text-txt-secondary hover:bg-surface-secondary hover:text-txt'
                   }`
                 }
               >

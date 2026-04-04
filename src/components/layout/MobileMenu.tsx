@@ -13,7 +13,7 @@ export function MobileMenu({ onClose }: MobileMenuProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-40 overflow-y-auto bg-[#f5efdf]/98 pt-14 backdrop-blur-sm"
+      className="fixed inset-0 z-40 overflow-y-auto bg-surface-overlay pt-14 backdrop-blur-sm"
     >
       <nav className="mx-auto max-w-lg space-y-1 p-6">
         {topNavigation.map((item) => (
@@ -22,8 +22,8 @@ export function MobileMenu({ onClose }: MobileMenuProps) {
               to={item.path!}
               onClick={onClose}
               className={({ isActive }) =>
-                `block border-b border-[#d2c8b3]/50 px-2 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.1em] transition-colors ${
-                  isActive ? 'text-stage-signal' : 'text-stage-text'
+                `block border-b border-line/50 px-2 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.1em] transition-colors ${
+                  isActive ? 'text-accent-signal' : 'text-txt'
                 }`
               }
             >
@@ -36,7 +36,7 @@ export function MobileMenu({ onClose }: MobileMenuProps) {
                 onClick={onClose}
                 className={({ isActive }) =>
                   `block py-2.5 pl-6 pr-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors ${
-                    isActive ? 'text-stage-signal' : 'text-[#6f6656]'
+                    isActive ? 'text-accent-signal' : 'text-txt-muted'
                   }`
                 }
               >
@@ -50,7 +50,7 @@ export function MobileMenu({ onClose }: MobileMenuProps) {
           <Link
             to="/download"
             onClick={onClose}
-            className="block w-full border border-stage-signal bg-stage-signal/10 px-4 py-3 text-center font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-stage-signal"
+            className="block w-full border border-accent-signal bg-accent-signal/10 px-4 py-3 text-center font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-accent-signal"
           >
             Download Companion
           </Link>

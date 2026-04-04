@@ -12,12 +12,12 @@ export function PipelineSection({ block }: PipelineSectionProps) {
         {(block.eyebrow || block.title) && (
           <div className="mb-8">
             {block.eyebrow && (
-              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-stage-cyan">
+              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent-cyan">
                 {block.eyebrow}
               </p>
             )}
             {block.title && (
-              <h2 className="text-2xl font-semibold tracking-[0.02em] text-[#1f1b15] sm:text-3xl">
+              <h2 className="text-2xl font-semibold tracking-[0.02em] text-txt sm:text-3xl">
                 {block.title}
               </h2>
             )}
@@ -25,8 +25,7 @@ export function PipelineSection({ block }: PipelineSectionProps) {
         )}
 
         <div className="relative">
-          {/* Connecting line */}
-          <div className="absolute left-6 top-0 hidden h-full w-px bg-[#d2c8b3] lg:block" />
+          <div className="absolute left-6 top-0 hidden h-full w-px bg-line lg:block" />
 
           <div className="space-y-6 lg:space-y-8">
             {block.steps.map((step, i) => (
@@ -38,14 +37,14 @@ export function PipelineSection({ block }: PipelineSectionProps) {
                 transition={{ duration: 0.25, delay: i * 0.1 }}
                 className="flex gap-4 lg:gap-6"
               >
-                <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center border border-[#d2c8b3] bg-[#f5efdf] font-mono text-sm font-bold text-stage-signal">
+                <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center border border-line bg-surface-elevated font-mono text-sm font-bold text-accent-signal">
                   {String(i + 1).padStart(2, '0')}
                 </div>
-                <div className="flex-1 border border-[#d2c8b3] bg-[#efe6d5]/60 p-5">
-                  <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-[#1f1b15]">
+                <div className="flex-1 border border-line bg-surface-secondary/60 p-5">
+                  <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
                     {step.label}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#534b3f]">{step.body}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-txt-secondary">{step.body}</p>
                 </div>
               </motion.div>
             ))}

@@ -14,13 +14,13 @@ export function HeroSection({ block }: HeroSectionProps) {
 
   return (
     <section
+      data-theme={isDark ? 'dark' : undefined}
       className={`relative overflow-hidden ${
         isDark
-          ? 'bg-stage-dark text-[#f5f0e4]'
-          : 'bg-stage-black text-stage-text'
+          ? 'bg-surface-primary text-txt'
+          : 'text-txt'
       } ${isCompact ? 'py-12 lg:py-16' : 'py-20 lg:py-32'}`}
     >
-      {/* Subtle grid overlay */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{
         backgroundImage: 'linear-gradient(90deg, currentColor 1px, transparent 1px), linear-gradient(currentColor 1px, transparent 1px)',
         backgroundSize: '60px 60px',
@@ -35,7 +35,7 @@ export function HeroSection({ block }: HeroSectionProps) {
         >
           {block.eyebrow && (
             <p className={`mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${
-              isDark ? 'text-stage-signal' : 'text-stage-cyan'
+              isDark ? 'text-accent-signal' : 'text-accent-cyan'
             }`}>
               {block.eyebrow}
             </p>
@@ -48,17 +48,13 @@ export function HeroSection({ block }: HeroSectionProps) {
           </h1>
 
           {block.subheadline && (
-            <p className={`mt-4 text-base leading-relaxed sm:text-lg ${
-              isDark ? 'text-[#c4bfb4]' : 'text-[#534b3f]'
-            }`}>
+            <p className="mt-4 text-base leading-relaxed text-txt-secondary sm:text-lg">
               {block.subheadline}
             </p>
           )}
 
           {block.body && (
-            <p className={`mt-4 text-sm leading-relaxed ${
-              isDark ? 'text-[#9e9888]' : 'text-[#6f6656]'
-            }`}>
+            <p className="mt-4 text-sm leading-relaxed text-txt-muted">
               {block.body}
             </p>
           )}
@@ -66,7 +62,7 @@ export function HeroSection({ block }: HeroSectionProps) {
           {block.actions.length > 0 && (
             <div className="mt-8 flex flex-wrap gap-3">
               {block.actions.map((action, i) => (
-                <HeroAction key={action.id} action={action} primary={i === 0} isDark={isDark} />
+                <HeroAction key={action.id} action={action} primary={i === 0} />
               ))}
             </div>
           )}
@@ -79,15 +75,11 @@ export function HeroSection({ block }: HeroSectionProps) {
 function HeroAction({
   action,
   primary,
-  isDark,
 }: {
   action: PageCommandAction
   primary: boolean
-  isDark: boolean
 }) {
-  const className = primary
-    ? 'px-6 py-2.5'
-    : `px-6 py-2.5 ${isDark ? '!border-[#3d382f] !text-[#c4bfb4] hover:!bg-[#2a2620]' : ''}`
+  const className = 'px-6 py-2.5'
 
   if (action.kind === 'route') {
     return (

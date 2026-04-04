@@ -2,14 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-  --stage-cream: #f5f0e4;
-  --stage-cream-deep: #eae2d1;
-  --line: rgba(47, 42, 34, 0.14);
-  --line-strong: rgba(47, 42, 34, 0.22);
-  --text-main: #201d16;
-  --text-soft: rgba(32, 29, 22, 0.72);
+/* ── Light theme (marketing site) ── */
+[data-theme='light'] {
+  --surface-primary: #ffffff;
+  --surface-secondary: #f7f7f5;
+  --surface-elevated: #ffffff;
+  --surface-overlay: rgba(255, 255, 255, 0.96);
+  --border-primary: #e2e0dc;
+  --border-subtle: #eeeceb;
+  --text-primary: #111111;
+  --text-secondary: #444444;
+  --text-muted: #888888;
+  --accent-signal: #0a9f45;
+  --accent-cyan: #0b7480;
+  --accent-amber: #9b6a00;
+  --accent-alert: #b1283f;
+  --grid-line: rgba(0, 0, 0, 0.04);
+  --grid-scanline: rgba(0, 0, 0, 0.018);
+}
+
+/* ── Dark theme (operator portal) ── */
+[data-theme='dark'] {
+  --surface-primary: #0a0a0a;
+  --surface-secondary: #131313;
+  --surface-elevated: #1a1a1a;
+  --surface-overlay: rgba(10, 10, 10, 0.96);
+  --border-primary: #262626;
+  --border-subtle: #1c1c1c;
+  --text-primary: #e8e8e8;
+  --text-secondary: #aaaaaa;
+  --text-muted: #666666;
+  --accent-signal: #2ea35f;
+  --accent-cyan: #2bbad0;
+  --accent-amber: #d4a020;
+  --accent-alert: #e04060;
+  --grid-line: rgba(255, 255, 255, 0.04);
+  --grid-scanline: rgba(255, 255, 255, 0.015);
 }
 
 *,
@@ -26,29 +54,11 @@ body,
 
 body {
   margin: 0;
-  background:
-    radial-gradient(1200px 560px at 80% -10%, rgba(197, 183, 151, 0.45), transparent 62%),
-    radial-gradient(900px 460px at 8% 110%, rgba(180, 168, 140, 0.22), transparent 58%),
-    var(--stage-cream);
-  color: var(--text-main);
+  background: #ffffff;
+  color: #111111;
   font-family: Inter, 'IBM Plex Sans', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   letter-spacing: 0.01em;
   overflow-x: hidden;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.26;
-  background:
-    linear-gradient(transparent 95%, rgba(45, 39, 31, 0.045) 96%),
-    linear-gradient(90deg, rgba(45, 39, 31, 0.03) 1px, transparent 1px);
-  background-size:
-    100% 6px,
-    40px 100%;
-  z-index: 1;
 }
 
 a {

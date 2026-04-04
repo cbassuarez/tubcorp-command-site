@@ -3,15 +3,15 @@ import { CommandButton } from '@/components/CommandButton'
 
 export function NotFoundPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-stage-black px-4 text-stage-text">
+    <div data-theme="light" className="flex min-h-screen items-center justify-center bg-surface-primary px-4 text-txt">
       <div className="max-w-md space-y-6 text-center">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-stage-cyan">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent-cyan">
           Route Not Found
         </p>
         <h1 className="text-2xl font-semibold tracking-[0.02em] sm:text-3xl">
           The requested path is not registered.
         </h1>
-        <p className="text-sm text-[#6f6656]">
+        <p className="text-sm text-txt-muted">
           This node does not exist in the TubCorp command network.
         </p>
         <Link to="/">

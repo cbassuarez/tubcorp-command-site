@@ -9,14 +9,17 @@ interface CTABandProps {
 }
 
 const variants = {
-  light: 'bg-[#eae2d1]/60 text-stage-text border-y border-[#d2c8b3]',
-  dark: 'bg-stage-dark text-[#f5f0e4]',
-  signal: 'bg-stage-signal/10 text-stage-text border-y border-stage-signal/20',
+  light: 'bg-surface-secondary/60 text-txt border-y border-line',
+  dark: 'bg-[#0a0a0a] text-[#e8e8e8]',
+  signal: 'bg-accent-signal/10 text-txt border-y border-accent-signal/20',
 }
 
 export function CTABand({ block }: CTABandProps) {
   return (
-    <section className={`py-12 lg:py-16 ${variants[block.variant]}`}>
+    <section
+      data-theme={block.variant === 'dark' ? 'dark' : undefined}
+      className={`py-12 lg:py-16 ${variants[block.variant]}`}
+    >
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -29,9 +32,7 @@ export function CTABand({ block }: CTABandProps) {
         </h2>
 
         {block.body && (
-          <p className={`mx-auto mt-3 max-w-xl text-sm leading-relaxed ${
-            block.variant === 'dark' ? 'text-[#9e9888]' : 'text-[#6f6656]'
-          }`}>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-txt-muted">
             {block.body}
           </p>
         )}
@@ -39,7 +40,7 @@ export function CTABand({ block }: CTABandProps) {
         {block.actions.length > 0 && (
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             {block.actions.map((action, i) => (
-              <CTAAction key={action.id} action={action} primary={i === 0} isDark={block.variant === 'dark'} />
+              <CTAAction key={action.id} action={action} primary={i === 0} />
             ))}
           </div>
         )}
@@ -48,8 +49,8 @@ export function CTABand({ block }: CTABandProps) {
   )
 }
 
-function CTAAction({ action, primary, isDark }: { action: PageCommandAction; primary: boolean; isDark: boolean }) {
-  const className = `px-6 py-2.5 ${isDark && !primary ? '!border-[#3d382f] !text-[#c4bfb4] hover:!bg-[#2a2620]' : ''}`
+function CTAAction({ action, primary }: { action: PageCommandAction; primary: boolean }) {
+  const className = 'px-6 py-2.5'
 
   if (action.kind === 'route') {
     return (

@@ -15,12 +15,12 @@ export function TierSection({ block }: TierSectionProps) {
         {(block.eyebrow || block.title) && (
           <div className="mb-8 text-center">
             {block.eyebrow && (
-              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-stage-cyan">
+              <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent-cyan">
                 {block.eyebrow}
               </p>
             )}
             {block.title && (
-              <h2 className="text-2xl font-semibold tracking-[0.02em] text-[#1f1b15] sm:text-3xl">
+              <h2 className="text-2xl font-semibold tracking-[0.02em] text-txt sm:text-3xl">
                 {block.title}
               </h2>
             )}
@@ -37,19 +37,19 @@ export function TierSection({ block }: TierSectionProps) {
               transition={{ duration: 0.25, delay: i * 0.08 }}
               className={`flex flex-col border p-6 ${
                 tier.highlighted
-                  ? 'border-stage-signal bg-stage-signal/5'
-                  : 'border-[#d2c8b3] bg-[#efe6d5]/60'
+                  ? 'border-accent-signal bg-accent-signal/5'
+                  : 'border-line bg-surface-secondary/60'
               }`}
             >
-              <h3 className="font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-[#1f1b15]">
+              <h3 className="font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-txt">
                 {tier.name}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#534b3f]">{tier.description}</p>
+              <p className="mt-2 text-sm leading-relaxed text-txt-secondary">{tier.description}</p>
 
-              <ul className="mt-5 flex-1 space-y-2 border-t border-[#d2c8b3] pt-4">
+              <ul className="mt-5 flex-1 space-y-2 border-t border-line pt-4">
                 {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-xs leading-relaxed text-[#534b3f]">
-                    <span className="mt-1 block h-1.5 w-1.5 shrink-0 bg-stage-signal" />
+                  <li key={feature} className="flex items-start gap-2 text-xs leading-relaxed text-txt-secondary">
+                    <span className="mt-1 block h-1.5 w-1.5 shrink-0 bg-accent-signal" />
                     {feature}
                   </li>
                 ))}
