@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Activity, Lock, Radar } from 'lucide-react'
 import { StatusChip } from '@/components/StatusChip'
+import { TubDitherSprite } from '@/components/TubDitherSprite'
 import type { TelemetryViewModel } from '@/hooks/useTelemetry'
 
 interface StatusStripProps {
@@ -11,7 +12,7 @@ export function StatusStrip({ telemetry }: StatusStripProps) {
   const { state, sourceLabel } = telemetry
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-40 border-b border-white/10 bg-[#040810]/92 backdrop-blur-sm">
+    <div className="fixed left-0 right-0 top-0 z-40 border-b border-[#d2c8b3] bg-[#f6f1e5]/95 backdrop-blur-sm">
       <motion.div
         className="mx-auto flex max-w-[1400px] items-center gap-2 px-3 py-2 sm:px-5"
         initial={{ opacity: 0, y: -8 }}
@@ -38,10 +39,10 @@ export function StatusStrip({ telemetry }: StatusStripProps) {
           accent={state.access === 'OPEN' ? 'signal' : state.access === 'RESTRICTED' ? 'amber' : 'alert'}
           icon={<Lock size={13} />}
         />
-        <StatusChip title="MODE" value={state.mode} active accent="signal" />
+        <TubDitherSprite />
         <div className="ml-auto hidden items-center gap-2 md:flex">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/48">SOURCE</span>
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/72">{sourceLabel}</span>
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6f6656]">SOURCE</span>
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[#2f2a21]">{sourceLabel}</span>
         </div>
       </motion.div>
     </div>

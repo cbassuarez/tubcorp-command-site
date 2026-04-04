@@ -5,14 +5,14 @@ export default {
     extend: {
       colors: {
         stage: {
-          black: '#000000',
-          line: '#1a1a1a',
-          text: '#f5f5f5',
-          muted: '#8f8f8f',
-          signal: '#00ff41',
-          cyan: '#00f5ff',
-          amber: '#ffbe0b',
-          alert: '#ff3d5a',
+          black: '#f5f0e4',
+          line: '#d8cfbc',
+          text: '#1c1a16',
+          muted: '#736c5d',
+          signal: '#0a9f45',
+          cyan: '#0b7480',
+          amber: '#9b6a00',
+          alert: '#b1283f',
         },
       },
       fontFamily: {

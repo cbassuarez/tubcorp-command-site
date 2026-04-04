@@ -16,14 +16,14 @@ export function DoctrinePage() {
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
       <div className="space-y-2">
         {doctrine.map((item) => (
-          <article key={item.code} className="grid gap-2 border border-stage-alert/30 bg-[#13090a]/64 p-4 sm:grid-cols-[100px_1fr]">
+          <article key={item.code} className="grid gap-2 border border-stage-alert/35 bg-[#f1e8d8] p-4 sm:grid-cols-[100px_1fr]">
             <div className="flex items-center gap-2 font-mono text-[11px] font-black uppercase tracking-[0.1em] text-stage-alert">
               <AlertTriangle size={14} />
               {item.code}
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-medium tracking-[0.01em] text-white/88">{item.rule}</p>
-              <p className="text-xs tracking-[0.02em] text-white/62">{item.consequence}</p>
+              <p className="text-sm font-medium tracking-[0.01em] text-[#261f1a]">{item.rule}</p>
+              <p className="text-xs tracking-[0.02em] text-[#665c4d]">{item.consequence}</p>
             </div>
           </article>
         ))}

@@ -11,7 +11,7 @@ export function HeerichStageCanvas({ intensity, className }: HeerichStageCanvasP
 
   return (
     <div
-      className={['pointer-events-none overflow-hidden border border-stage-signal/20 bg-black/70', className ?? '']
+      className={['pointer-events-none overflow-hidden border border-[#d2c8b3] bg-[#f5efdf]', className ?? '']
         .join(' ')
         .trim()}
       aria-hidden

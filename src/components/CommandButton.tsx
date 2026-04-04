@@ -34,10 +34,10 @@ export function CommandButton({
     'inline-flex min-h-11 items-center justify-center gap-2 border px-4 py-2 text-[11px] font-semibold tracking-[0.08em]',
     'font-mono uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stage-cyan/60',
     warning
-      ? 'border-stage-amber/60 text-stage-amber hover:border-stage-amber/80 hover:bg-stage-amber/12'
-      : 'border-white/20 text-white/88 hover:border-white/35 hover:bg-white/6',
-    active && !solid ? 'border-stage-signal/80 bg-stage-signal/12 text-stage-signal' : '',
-    solid ? 'border-stage-signal bg-stage-signal text-black hover:bg-stage-signal/90' : '',
+      ? 'border-stage-amber/65 text-stage-amber hover:border-stage-amber/85 hover:bg-stage-amber/12'
+      : 'border-[#c6bca6] text-[#2d281f] hover:border-[#9e947d] hover:bg-[#e9deca]/60',
+    active && !solid ? 'border-stage-signal/80 bg-stage-signal/15 text-stage-signal' : '',
+    solid ? 'border-stage-signal bg-stage-signal text-[#102213] hover:bg-stage-signal/88' : '',
     className ?? '',
   ]
     .join(' ')

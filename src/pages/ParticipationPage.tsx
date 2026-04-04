@@ -16,11 +16,11 @@ export function ParticipationPage() {
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
       <div className="grid gap-3 sm:grid-cols-2">
         {channels.map((channel) => (
-          <article key={channel.title} className="border border-white/15 bg-[#07111d]/75 p-4">
+          <article key={channel.title} className="border border-[#d2c8b3] bg-[#efe7d6]/78 p-4">
             <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.11em] text-stage-signal">
               {channel.title}
             </h2>
-            <p className="mt-2 text-sm leading-relaxed tracking-[0.01em] text-white/74">{channel.description}</p>
+            <p className="mt-2 text-sm leading-relaxed tracking-[0.01em] text-[#40392f]/84">{channel.description}</p>
           </article>
         ))}
       </div>

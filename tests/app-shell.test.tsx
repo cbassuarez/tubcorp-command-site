@@ -6,7 +6,7 @@ describe('app shell', () => {
   it('renders fixed status chips', async () => {
     render(<App />)
     expect(await screen.findByText('LINK')).toBeInTheDocument()
-    expect(await screen.findByText('MODE')).toBeInTheDocument()
+    expect(await screen.findByText('SOURCE')).toBeInTheDocument()
   })
 
   it('shows download hero on entry route', async () => {

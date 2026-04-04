@@ -17,8 +17,8 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
     <div className="min-h-screen bg-stage-black text-stage-text">
       <StatusStrip telemetry={telemetry} />
 
-      <aside className="fixed bottom-0 left-0 top-14 z-30 hidden w-[268px] border-r border-white/10 bg-[#060c15]/88 p-4 backdrop-blur-sm md:block">
-        <h2 className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">
+      <aside className="fixed bottom-0 left-0 top-14 z-30 hidden w-[268px] border-r border-[#d2c8b3] bg-[#f0e8d8]/94 p-4 backdrop-blur-sm md:block">
+        <h2 className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#6f6656]">
           Navigation
         </h2>
         <nav className="space-y-2">
@@ -48,7 +48,7 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
         </AnimatePresence>
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-black/95 p-2 md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#d2c8b3] bg-[#f5efdf]/96 p-2 md:hidden">
         <div className="grid grid-cols-4 gap-2">
           {shellNavigation.slice(0, 4).map((item) => (
             <NavLink key={item.path} to={item.path}>

@@ -14,11 +14,11 @@ export function SurfacesPage() {
 
   return (
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
-      <div className="overflow-hidden border border-white/15 bg-[#07111d]/75">
+      <div className="overflow-hidden border border-[#d2c8b3] bg-[#efe7d6]/78">
         {surfaceRows.map(([title, body]) => (
-          <div key={title} className="grid grid-cols-[120px_1fr] border-b border-white/10 px-4 py-3 last:border-b-0">
+          <div key={title} className="grid grid-cols-[120px_1fr] border-b border-[#d2c8b3] px-4 py-3 last:border-b-0">
             <span className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-stage-cyan">{title}</span>
-            <span className="text-sm leading-relaxed tracking-[0.01em] text-white/74">{body}</span>
+            <span className="text-sm leading-relaxed tracking-[0.01em] text-[#40392f]/84">{body}</span>
           </div>
         ))}
       </div>

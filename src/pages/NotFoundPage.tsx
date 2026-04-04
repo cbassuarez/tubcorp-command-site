@@ -9,8 +9,8 @@ export function NotFoundPage() {
       subtitle="THE REQUESTED COMMAND NODE IS NOT REGISTERED."
       command="scli route inspect --path unknown"
     >
-      <div className="border border-stage-alert/35 bg-black/65 p-5">
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.13em] text-white/70">
+      <div className="border border-stage-alert/35 bg-[#f1e8d8] p-5">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.13em] text-[#5b5042]">
           REJOIN THE MAIN COMMAND NETWORK TO CONTINUE.
         </p>
       </div>
