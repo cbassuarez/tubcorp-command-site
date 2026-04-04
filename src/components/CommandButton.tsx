@@ -71,9 +71,9 @@ export function CommandButton({
     </motion.button>
   )
 
-  if (solid) {
-    return <HoverCanvas speed={0.14}>{el}</HoverCanvas>
-  }
-
-  return el
+  return (
+    <HoverCanvas mode="button" speed={solid ? 0.14 : 0.12}>
+      {el}
+    </HoverCanvas>
+  )
 }

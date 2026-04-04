@@ -15,11 +15,11 @@ export interface HeerichProgram {
 
 const PALETTES = {
   light: {
-    baseFill: '#e8e8e8', baseStroke: '#d0d0d0', baseTop: '#f2f2f2',
-    voxFill: '#d4d4d4', voxStroke: '#c0c0c0', voxTop: '#e0e0e0',
-    actFill: '#a8dbb8', actStroke: '#6bc88d', actTop: '#0a9f45',
-    hiTop: '#06803a', hiFill: '#7fd4a0',
-    dimFill: '#dcdcdc', dimTop: '#cccccc',
+    baseFill: '#d9e1e8', baseStroke: '#8b98a3', baseTop: '#eff4f8',
+    voxFill: '#b8c4ce', voxStroke: '#73818d', voxTop: '#d2dde5',
+    actFill: '#5dc88d', actStroke: '#1f925b', actTop: '#0f7b47',
+    hiTop: '#065d37', hiFill: '#34a66d',
+    dimFill: '#a8b4be', dimTop: '#c8d2da',
   },
   dark: {
     baseFill: '#1a1a1a', baseStroke: '#2a2a2a', baseTop: '#222222',

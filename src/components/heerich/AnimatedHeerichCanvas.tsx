@@ -12,17 +12,60 @@ interface AnimatedHeerichCanvasProps {
   noShadow?: boolean
 }
 
+function frameLooksBlank(ctx: CanvasRenderingContext2D, w: number, h: number): boolean {
+  if (w < 4 || h < 4) return true
+
+  const cols = 8
+  const rows = 6
+  let minLuma = 255
+  let maxLuma = 0
+  let minR = 255
+  let minG = 255
+  let minB = 255
+  let maxR = 0
+  let maxG = 0
+  let maxB = 0
+  let opaqueSamples = 0
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      const sx = Math.min(w - 1, Math.max(0, Math.floor((x + 0.5) * (w / cols))))
+      const sy = Math.min(h - 1, Math.max(0, Math.floor((y + 0.5) * (h / rows))))
+      const px = ctx.getImageData(sx, sy, 1, 1).data
+      if (px[3] < 12) continue
+
+      opaqueSamples += 1
+      const luma = px[0] * 0.2126 + px[1] * 0.7152 + px[2] * 0.0722
+      minLuma = Math.min(minLuma, luma)
+      maxLuma = Math.max(maxLuma, luma)
+      minR = Math.min(minR, px[0])
+      minG = Math.min(minG, px[1])
+      minB = Math.min(minB, px[2])
+      maxR = Math.max(maxR, px[0])
+      maxG = Math.max(maxG, px[1])
+      maxB = Math.max(maxB, px[2])
+    }
+  }
+
+  if (opaqueSamples < 6) return true
+
+  const lumaRange = maxLuma - minLuma
+  const channelRange = Math.max(maxR - minR, maxG - minG, maxB - minB)
+  return lumaRange < 16 && channelRange < 22
+}
+
 export function AnimatedHeerichCanvas({ program, theme = 'light', className, noShadow }: AnimatedHeerichCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const rafRef = useRef(0)
   const startRef = useRef(0)
   const lastFrameRef = useRef(0)
   const visibleRef = useRef(true)
+  const guardNextPaintRef = useRef(true)
   const sizeRef = useRef({ w: 0, h: 0 })
 
   const prog = programs[program] ?? programs['idle-drift']
 
-  const paint = useCallback((elapsed: number) => {
+  const paint = useCallback((elapsed: number, guardBlank = false) => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -34,6 +77,13 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
     const scene = prog.tick(elapsed, theme)
     const cam = fitCamera(prog.gridW, prog.gridD, prog.maxZ, w, h)
     renderScene(ctx, scene, cam, w, h)
+
+    if (!guardBlank || !frameLooksBlank(ctx, w, h)) return
+
+    // Fallback: repaint with the opposite theme profile to guarantee contrast.
+    const fallbackTheme: HeerichTheme = theme === 'light' ? 'dark' : 'light'
+    const fallbackScene = prog.tick(elapsed, fallbackTheme)
+    renderScene(ctx, fallbackScene, cam, w, h)
   }, [prog, theme])
 
   useEffect(() => {
@@ -43,6 +93,7 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
     // Reset timing on program/theme change
     startRef.current = 0
     lastFrameRef.current = 0
+    guardNextPaintRef.current = true
 
     // Size the canvas
     const resize = () => {
@@ -54,6 +105,7 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
         canvas.width = w
         canvas.height = h
         sizeRef.current = { w, h }
+        guardNextPaintRef.current = true
       }
     }
 
@@ -62,7 +114,8 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
     resize()
 
     // Paint first frame immediately
-    paint(0)
+    paint(0, guardNextPaintRef.current)
+    guardNextPaintRef.current = false
 
     const interval = 1000 / prog.fps
 
@@ -73,7 +126,8 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
 
       if (now - lastFrameRef.current >= interval && visibleRef.current) {
         lastFrameRef.current = now
-        paint(elapsed)
+        paint(elapsed, guardNextPaintRef.current)
+        guardNextPaintRef.current = false
       }
 
       rafRef.current = requestAnimationFrame(tick)
@@ -82,7 +136,15 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
     rafRef.current = requestAnimationFrame(tick)
 
     const observer = new IntersectionObserver(
-      ([entry]) => { visibleRef.current = entry.isIntersecting },
+      ([entry]) => {
+        visibleRef.current = entry.isIntersecting
+        if (!entry.isIntersecting) return
+        guardNextPaintRef.current = true
+        const now = performance.now()
+        const elapsed = startRef.current ? now - startRef.current : 0
+        paint(elapsed, true)
+        guardNextPaintRef.current = false
+      },
       { threshold: 0.05 },
     )
     observer.observe(canvas)

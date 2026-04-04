@@ -241,6 +241,7 @@ uniform float uTime;
 uniform vec2 uResolution;
 uniform vec2 uMouse;   // normalised 0-1 within element
 uniform float uHover;  // 0-1 intensity (smoothly lerped)
+uniform int uMode;     // 0 default, 1 button
 
 in vec2 vUV;
 out vec4 fragColor;
@@ -290,7 +291,39 @@ void main() {
 
   // ── 6. Refocus vignette — edges dim to draw the eye ──
   float vig = 1.0 - uHover * 0.15 * dot(uv - 0.5, uv - 0.5) * 2.0;
-  color *= clamp(vig, 0.82, 1.0);
+
+  // ── Button mode: high-intensity spectral hover ──
+  if (uMode == 1) {
+    // Animated spectral refraction around cursor.
+    float prism = (0.5 + 0.5 * sin(uTime * 3.0 + dist * 72.0));
+    float spectral = uHover * smoothstep(0.60, 0.0, dist) * (0.007 + prism * 0.011);
+    vec2 spectralOffset = dir * spectral;
+    float sr = texture(uContent, uv + spectralOffset * 1.8).r;
+    float sg = texture(uContent, uv + vec2(-spectralOffset.y, spectralOffset.x) * 0.75).g;
+    float sb = texture(uContent, uv - spectralOffset * 1.35).b;
+    vec3 spectralCol = vec3(sr, sg, sb);
+    color = mix(color, spectralCol, 0.68 * uHover);
+
+    // Cursor-reactive distortion field.
+    vec2 tangent = vec2(-dir.y, dir.x);
+    float ripple = sin(dist * 96.0 - uTime * 11.0) * exp(-dist * 6.8) * uHover * 0.012;
+    vec2 warpUV = uv + tangent * ripple + diff * (uHover * 0.010 * exp(-dist * 4.4));
+    vec3 warped = texture(uContent, warpUV).rgb;
+    color = mix(color, warped, 0.44 * uHover);
+
+    // Traveling RGB edge glow.
+    float edgeBand = smoothstep(0.045, 0.0, edgeDist);
+    float edgePulse = 0.5 + 0.5 * sin((uv.x + uv.y) * 46.0 - uTime * 8.2);
+    vec3 edgeRainbow = 0.5 + 0.5 * cos(vec3(0.0, 2.094, 4.188) + uTime * 2.7 + dist * 26.0);
+    color += edgeRainbow * edgeBand * edgePulse * uHover * 0.38;
+
+    // Stronger spotlight for "magnetic" feel, but keep detail legible.
+    color += edgeRainbow * exp(-dist * 3.2) * uHover * 0.09;
+    vig = 1.0 - uHover * 0.09 * dot(uv - 0.5, uv - 0.5) * 1.6;
+  }
+
+  color *= clamp(vig, 0.84, 1.05);
+  color = clamp(color, 0.0, 1.0);
 
   float a = texture(uContent, uv).a;
   fragColor = vec4(color, a);

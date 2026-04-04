@@ -11,16 +11,16 @@ import type { ColorStops } from 'funky-shadow'
 type TubPreset = 'signal' | 'scan' | 'terminal' | 'subtle' | 'amber'
 
 const TUB_COLORS: Record<TubPreset, ColorStops> = {
-  // Green signal glow — primary brand
-  signal: [[0, 20, 10], [10, 80, 40], [30, 140, 70], [46, 163, 95], [80, 200, 120]],
-  // Deep blue scan lines — surveillance
-  scan: [[0, 0, 0], [0, 0, 80], [0, 60, 140], [0, 130, 180], [60, 180, 200]],
-  // CRT terminal phosphor
-  terminal: [[0, 10, 0], [0, 40, 15], [10, 95, 40], [30, 160, 80], [80, 220, 120], [160, 255, 180]],
-  // Low-key neutral
-  subtle: [[0, 0, 0], [20, 20, 25], [50, 50, 60], [90, 90, 100]],
-  // Warning amber
-  amber: [[40, 10, 0], [120, 60, 0], [200, 140, 0], [255, 190, 50]],
+  // Signal: green/cyan with controlled magenta and amber accents.
+  signal: [[8, 20, 16], [18, 122, 92], [36, 184, 208], [84, 110, 252], [230, 86, 178], [255, 186, 84]],
+  // Scan: deep RGB sweep inspired by legacy cloud infra dashboards.
+  scan: [[6, 10, 36], [12, 46, 136], [16, 122, 214], [52, 198, 172], [186, 214, 84], [248, 128, 86]],
+  // Terminal phosphor with richer RGB spread.
+  terminal: [[0, 22, 10], [6, 78, 48], [16, 150, 122], [32, 162, 248], [118, 112, 255], [190, 232, 166]],
+  // Subtle: still restrained, but no longer monochrome.
+  subtle: [[16, 20, 30], [34, 52, 78], [64, 86, 124], [98, 104, 146], [132, 122, 160]],
+  // Warning amber with hot RGB edge tones.
+  amber: [[38, 16, 6], [114, 52, 12], [194, 112, 24], [252, 182, 52], [255, 132, 86], [214, 92, 154]],
 }
 
 interface DitheredShadowProps {
@@ -39,6 +39,12 @@ interface DitheredShadowProps {
   opacity?: number
   /** Pixel scale / dot size (default 3) */
   pixelScale?: number
+  /** Contrast 100 = neutral (default 156) */
+  contrast?: number
+  /** Brightness in -100..100 (default 12) */
+  brightness?: number
+  /** Quantization levels (default 6) */
+  quantLevels?: number
   /** Border radius (default 0) */
   radius?: number
   /** Gradient shape (default 'radial') */
@@ -53,9 +59,12 @@ export function DitheredShadow({
   colors,
   offsetY = 12,
   offsetX = 0,
-  blur = 24,
-  opacity = 0.55,
-  pixelScale = 3,
+  blur = 30,
+  opacity = 0.72,
+  pixelScale = 2,
+  contrast = 156,
+  brightness = 12,
+  quantLevels = 6,
   radius = 0,
   shape = 'radial',
   className,
@@ -89,6 +98,9 @@ export function DitheredShadow({
           opacity={opacity}
           shape={shape}
           dither="4x4"
+          quantLevels={quantLevels}
+          contrast={contrast}
+          brightness={brightness}
           oklab
         >
           {children}

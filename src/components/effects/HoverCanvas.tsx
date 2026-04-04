@@ -26,18 +26,20 @@ interface Props {
   className?: string
   /** Lerp speed 0-1 (default 0.10) */
   speed?: number
+  /** Visual mode (default: restrained hover) */
+  mode?: 'default' | 'button'
 }
 
-export function HoverCanvas({ children, className, speed }: Props) {
+export function HoverCanvas({ children, className, speed, mode }: Props) {
   if (!isHtmlInCanvasSupported()) {
     return <div className={className}>{children}</div>
   }
-  return <HoverShell className={className} speed={speed}>{children}</HoverShell>
+  return <HoverShell className={className} speed={speed} mode={mode}>{children}</HoverShell>
 }
 
 // ── Inner (only mounts when API is available) ──
 
-function HoverShell({ children, className, speed = 0.10 }: Props) {
+function HoverShell({ children, className, speed = 0.10, mode = 'default' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
@@ -66,6 +68,7 @@ function HoverShell({ children, className, speed = 0.10 }: Props) {
       uResolution: WebGLUniformLocation | null
       uMouse: WebGLUniformLocation | null
       uHover: WebGLUniformLocation | null
+      uMode: WebGLUniformLocation | null
     }
     passU: { uContent: WebGLUniformLocation | null }
   } | null>(null)
@@ -112,6 +115,7 @@ function HoverShell({ children, className, speed = 0.10 }: Props) {
       uResolution: gl.getUniformLocation(hoverProg, 'uResolution'),
       uMouse: gl.getUniformLocation(hoverProg, 'uMouse'),
       uHover: gl.getUniformLocation(hoverProg, 'uHover'),
+      uMode: gl.getUniformLocation(hoverProg, 'uMode'),
     }
     const passU = {
       uContent: gl.getUniformLocation(passProg, 'uContent'),
@@ -183,6 +187,7 @@ function HoverShell({ children, className, speed = 0.10 }: Props) {
         gl.uniform2f(hoverU.uResolution, w, h)
         gl.uniform2f(hoverU.uMouse, s.mouse.x, s.mouse.y)
         gl.uniform1f(hoverU.uHover, s.hover)
+        gl.uniform1i(hoverU.uMode, mode === 'button' ? 1 : 0)
       } else {
         bindProgram(gl, passProg, quad)
         gl.uniform1i(passU.uContent, 0)
@@ -228,7 +233,7 @@ function HoverShell({ children, className, speed = 0.10 }: Props) {
       gl.deleteProgram(passProg)
       glRef.current = null
     }
-  }, [speed, startLoop, stopLoop])
+  }, [mode, speed, startLoop, stopLoop])
 
   return (
     <canvas
