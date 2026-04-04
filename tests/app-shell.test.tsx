@@ -13,10 +13,10 @@ describe('app shell', () => {
     window.history.pushState({}, '', '/')
     render(<App />)
     const headings = await screen.findAllByRole('heading', {
-      name: /download companion/i,
+      name: /tub companion/i,
     })
     expect(headings.length).toBeGreaterThan(0)
-    const ctas = await screen.findAllByText('DOWNLOAD IOS CLIENT')
+    const ctas = await screen.findAllByText('Download Companion iOS App')
     expect(ctas.length).toBeGreaterThan(0)
   })
 })

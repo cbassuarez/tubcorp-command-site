@@ -11,7 +11,7 @@ export function StatusStrip({ telemetry }: StatusStripProps) {
   const { state, sourceLabel } = telemetry
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-40 border-b border-white/10 bg-black/92 backdrop-blur-[2px]">
+    <div className="fixed left-0 right-0 top-0 z-40 border-b border-white/10 bg-[#040810]/92 backdrop-blur-sm">
       <motion.div
         className="mx-auto flex max-w-[1400px] items-center gap-2 px-3 py-2 sm:px-5"
         initial={{ opacity: 0, y: -8 }}
@@ -39,8 +39,9 @@ export function StatusStrip({ telemetry }: StatusStripProps) {
           icon={<Lock size={13} />}
         />
         <StatusChip title="MODE" value={state.mode} active accent="signal" />
-        <div className="ml-auto hidden font-mono text-[10px] font-semibold uppercase tracking-[0.17em] text-white/45 md:block">
-          SOURCE {sourceLabel}
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/48">SOURCE</span>
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/72">{sourceLabel}</span>
         </div>
       </motion.div>
     </div>

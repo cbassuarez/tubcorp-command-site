@@ -12,9 +12,11 @@ describe('page content contract', () => {
     })
   })
 
-  it('uses all-caps command titles', () => {
+  it('includes routing and command metadata for every page', () => {
     Object.values(pageSpecs).forEach((spec) => {
-      expect(spec.title).toBe(spec.title.toUpperCase())
+      expect(spec.route.length).toBeGreaterThan(0)
+      expect(spec.command.length).toBeGreaterThan(0)
+      expect(spec.subtitle.length).toBeGreaterThan(0)
     })
   })
 })

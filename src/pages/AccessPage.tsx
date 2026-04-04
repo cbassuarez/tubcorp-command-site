@@ -4,9 +4,9 @@ import { PageFrame } from '@/components/PageFrame'
 import { pageSpecs } from '@/content/siteContent'
 
 const roles = [
-  { id: 'audience-op', title: 'AUDIENCE OPERATOR', detail: 'REAL-TIME STEER + PLAY PARTICIPATION RIGHTS.' },
-  { id: 'floor-tech', title: 'FLOOR TECH', detail: 'ROUTE DIAGNOSTICS, HANDSHAKE, AND RECOVERY AUTHORITY.' },
-  { id: 'archive-review', title: 'ARCHIVE REVIEW', detail: 'SESSION LOG INSPECTION + SNAPSHOT AUDITING.' },
+  { id: 'audience-op', title: 'Audience Operator', detail: 'Real-time STEER and PLAY rights for supervised participant input.' },
+  { id: 'floor-tech', title: 'Floor Technician', detail: 'Route diagnostics, handshake oversight, and recovery authority.' },
+  { id: 'archive-review', title: 'Archive Review', detail: 'Session log inspection, traceability, and post-show auditing.' },
 ]
 
 export function AccessPage() {
@@ -16,19 +16,19 @@ export function AccessPage() {
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
       <div className="grid gap-3 md:grid-cols-3">
         {roles.map((role) => (
-          <article key={role.id} className="space-y-2 border border-white/15 bg-black/65 p-4">
-            <p className="font-mono text-[11px] font-black uppercase tracking-[0.15em] text-stage-signal">{role.title}</p>
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.11em] text-white/63">{role.detail}</p>
-            <div className="flex items-center gap-2 border border-white/10 bg-black/70 p-2 font-mono text-[10px] uppercase tracking-[0.12em] text-stage-cyan">
+          <article key={role.id} className="space-y-2 border border-white/15 bg-[#07111d]/75 p-4">
+            <p className="font-mono text-[11px] font-black uppercase tracking-[0.1em] text-stage-signal">{role.title}</p>
+            <p className="text-sm leading-relaxed tracking-[0.01em] text-white/68">{role.detail}</p>
+            <div className="flex items-center gap-2 border border-white/10 bg-black/55 p-2 font-mono text-[10px] uppercase tracking-[0.1em] text-stage-cyan">
               <ShieldCheck size={13} />
-              CHANNEL READY
+              Channel Ready
             </div>
           </article>
         ))}
       </div>
-      <div className="flex items-center gap-2 border border-stage-amber/35 bg-black/65 p-3 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-stage-amber">
+      <div className="flex items-center gap-2 border border-stage-amber/35 bg-black/55 p-3 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-stage-amber">
         <Download size={13} />
-        CLIENT DELIVERY REQUIRED BEFORE LIVE PARTICIPATION.
+        Client deployment is required before live participation can be enabled.
       </div>
       <CommandSections spec={spec} />
     </PageFrame>

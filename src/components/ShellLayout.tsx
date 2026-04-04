@@ -17,20 +17,22 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
     <div className="min-h-screen bg-stage-black text-stage-text">
       <StatusStrip telemetry={telemetry} />
 
-      <aside className="fixed bottom-0 left-0 top-14 z-30 hidden w-[260px] border-r border-white/10 bg-black/82 p-4 md:block">
-        <h2 className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">Command Rail</h2>
+      <aside className="fixed bottom-0 left-0 top-14 z-30 hidden w-[268px] border-r border-white/10 bg-[#060c15]/88 p-4 backdrop-blur-sm md:block">
+        <h2 className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">
+          Navigation
+        </h2>
         <nav className="space-y-2">
           {shellNavigation.map((item) => (
             <NavLink key={item.path} to={item.path}>
               {({ isActive }) => (
-                <CommandButton label={item.label} active={isActive} className="w-full justify-start px-3" />
+                <CommandButton label={item.label} active={isActive} className="w-full justify-start px-3 py-2.5" />
               )}
             </NavLink>
           ))}
         </nav>
       </aside>
 
-      <main className="mx-auto w-full max-w-[1420px] px-4 pb-24 pt-20 md:pl-[290px] md:pr-8">
+      <main className="mx-auto w-full max-w-[1420px] px-4 pb-24 pt-20 md:pl-[300px] md:pr-8">
         <SignalTape lines={telemetry.logLines.slice(0, 8)} />
         <AnimatePresence mode="wait">
           <motion.div

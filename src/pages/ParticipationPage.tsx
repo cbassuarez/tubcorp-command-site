@@ -3,10 +3,10 @@ import { PageFrame } from '@/components/PageFrame'
 import { pageSpecs } from '@/content/siteContent'
 
 const channels = [
-  { title: 'BUTTON GRID', description: 'DISCRETE MODE REQUESTS AND INTERRUPT GATES.' },
-  { title: 'OFF-SITE MIC', description: 'PERSISTENT ENVIRONMENTAL HEARING CHANNEL.' },
-  { title: 'KINECT FIELD', description: 'BODY DENSITY, TRAJECTORY, AND ORIENTATION SCANS.' },
-  { title: 'ML MEDIATOR', description: 'CROSS-MODAL RESOLUTION LAYER FOR FINAL OUTPUT.' },
+  { title: 'Button Input', description: 'Discrete participant actions for immediate intent and policy requests.' },
+  { title: 'Off-Site Microphone', description: 'Always-on ambient hearing channel for crowd context and tone.' },
+  { title: 'Body Tracking', description: 'Spatial posture, trajectory, and density signals from floor participants.' },
+  { title: 'ML Mediation', description: 'Cross-modal fusion layer that reconciles competing input in real time.' },
 ]
 
 export function ParticipationPage() {
@@ -16,11 +16,11 @@ export function ParticipationPage() {
     <PageFrame title={spec.title} subtitle={spec.subtitle} command={spec.command}>
       <div className="grid gap-3 sm:grid-cols-2">
         {channels.map((channel) => (
-          <article key={channel.title} className="border border-white/15 bg-black/60 p-4">
-            <h2 className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-stage-signal">{channel.title}</h2>
-            <p className="mt-2 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white/65">
-              {channel.description}
-            </p>
+          <article key={channel.title} className="border border-white/15 bg-[#07111d]/75 p-4">
+            <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.11em] text-stage-signal">
+              {channel.title}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed tracking-[0.01em] text-white/74">{channel.description}</p>
           </article>
         ))}
       </div>

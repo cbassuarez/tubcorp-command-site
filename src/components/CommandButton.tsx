@@ -31,12 +31,12 @@ export function CommandButton({
   icon,
 }: CommandButtonProps) {
   const baseClass = [
-    'inline-flex min-h-11 items-center justify-center gap-2 border px-4 py-2 text-[11px] font-bold tracking-[0.18em]',
+    'inline-flex min-h-11 items-center justify-center gap-2 border px-4 py-2 text-[11px] font-semibold tracking-[0.08em]',
     'font-mono uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stage-cyan/60',
     warning
-      ? 'border-stage-amber/60 text-stage-amber hover:bg-stage-amber/10'
-      : 'border-white/20 text-white/85 hover:bg-white/5',
-    active && !solid ? 'border-stage-signal/70 text-stage-signal' : '',
+      ? 'border-stage-amber/60 text-stage-amber hover:border-stage-amber/80 hover:bg-stage-amber/12'
+      : 'border-white/20 text-white/88 hover:border-white/35 hover:bg-white/6',
+    active && !solid ? 'border-stage-signal/80 bg-stage-signal/12 text-stage-signal' : '',
     solid ? 'border-stage-signal bg-stage-signal text-black hover:bg-stage-signal/90' : '',
     className ?? '',
   ]
