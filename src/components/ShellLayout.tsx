@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useOutlet } from 'react-router-dom'
 import { CommandButton } from '@/components/CommandButton'
 import { SignalTape } from '@/components/SignalTape'
 import { StatusStrip } from '@/components/StatusStrip'
@@ -12,6 +12,7 @@ interface ShellLayoutProps {
 
 export function ShellLayout({ telemetry }: ShellLayoutProps) {
   const location = useLocation()
+  const outlet = useOutlet()
 
   return (
     <div className="min-h-screen bg-stage-black text-stage-text">
@@ -43,7 +44,7 @@ export function ShellLayout({ telemetry }: ShellLayoutProps) {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <Outlet />
+            {outlet}
           </motion.div>
         </AnimatePresence>
       </main>

@@ -1,10 +1,11 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TopNav } from '@/components/layout/TopNav'
 import { Footer } from '@/components/layout/Footer'
 
 export function MarketingLayout() {
   const location = useLocation()
+  const outlet = useOutlet()
 
   return (
     <div className="min-h-screen bg-stage-black text-stage-text">
@@ -19,7 +20,7 @@ export function MarketingLayout() {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
-            <Outlet />
+            {outlet}
           </motion.div>
         </AnimatePresence>
       </main>
