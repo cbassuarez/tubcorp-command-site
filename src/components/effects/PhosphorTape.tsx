@@ -17,7 +17,7 @@ import {
   createProgram,
   createQuadBuffer,
   createFBO,
-  useProgram,
+  bindProgram,
 } from '@/lib/htmlCanvas/webgl'
 import {
   FULLSCREEN_VS,
@@ -145,7 +145,7 @@ function BloomShell({ children, className }: Props) {
       // Pass 1: Threshold → fboA
       gl.bindFramebuffer(gl.FRAMEBUFFER, fboA.fbo)
       gl.viewport(0, 0, bw, bh)
-      useProgram(gl, threshProg, quad)
+      bindProgram(gl, threshProg, quad)
       gl.uniform1i(thresh.uContent, 0)
       gl.uniform1f(thresh.uThreshold, 0.15)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
@@ -154,7 +154,7 @@ function BloomShell({ children, className }: Props) {
       gl.bindFramebuffer(gl.FRAMEBUFFER, fboB.fbo)
       gl.activeTexture(gl.TEXTURE0)
       gl.bindTexture(gl.TEXTURE_2D, fboA.texture)
-      useProgram(gl, blurProg, quad)
+      bindProgram(gl, blurProg, quad)
       gl.uniform1i(blur.uSource, 0)
       gl.uniform2f(blur.uDirection, 1.0 / bw, 0.0)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
@@ -174,7 +174,7 @@ function BloomShell({ children, className }: Props) {
       gl.activeTexture(gl.TEXTURE1)
       gl.bindTexture(gl.TEXTURE_2D, fboA.texture)
 
-      useProgram(gl, compProg, quad)
+      bindProgram(gl, compProg, quad)
       gl.uniform1i(comp.uContent, 0)
       gl.uniform1i(comp.uBloom, 1)
       gl.uniform1f(comp.uStrength, 1.2)

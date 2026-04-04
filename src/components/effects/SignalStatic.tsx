@@ -10,7 +10,7 @@
  */
 import { useRef, useEffect, useLayoutEffect, type ReactNode } from 'react'
 import { isHtmlInCanvasSupported } from '@/lib/htmlCanvas/detect'
-import { createProgram, createQuadBuffer, useProgram } from '@/lib/htmlCanvas/webgl'
+import { createProgram, createQuadBuffer, bindProgram } from '@/lib/htmlCanvas/webgl'
 import { FULLSCREEN_VS, STATIC_FS, PASSTHROUGH_FS } from '@/lib/htmlCanvas/shaders'
 
 interface Props {
@@ -126,14 +126,14 @@ function StaticShell({ children, value, className }: Props) {
 
       if (s.intensity > 0.005) {
         // Static shader active
-        useProgram(gl, staticProg, quad)
+        bindProgram(gl, staticProg, quad)
         gl.uniform1i(staticU.uContent, 0)
         gl.uniform1f(staticU.uIntensity, s.intensity)
         gl.uniform1f(staticU.uTime, now / 1000)
         gl.uniform2f(staticU.uResolution, w, h)
       } else {
         // Passthrough
-        useProgram(gl, passProg, quad)
+        bindProgram(gl, passProg, quad)
         gl.uniform1i(passU.uContent, 0)
       }
 

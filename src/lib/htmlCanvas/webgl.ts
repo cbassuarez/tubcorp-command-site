@@ -49,7 +49,7 @@ export function createFBO(gl: WebGL2RenderingContext, w: number, h: number) {
 }
 
 /** Bind a program and set up the fullscreen quad vertex attribute. */
-export function useProgram(gl: WebGL2RenderingContext, prog: WebGLProgram, quad: WebGLBuffer) {
+export function bindProgram(gl: WebGL2RenderingContext, prog: WebGLProgram, quad: WebGLBuffer) {
   gl.useProgram(prog)
   const loc = gl.getAttribLocation(prog, 'aPosition')
   gl.bindBuffer(gl.ARRAY_BUFFER, quad)

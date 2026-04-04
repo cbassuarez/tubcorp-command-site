@@ -12,7 +12,7 @@
 import { useRef, useEffect, useLayoutEffect, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { isHtmlInCanvasSupported } from '@/lib/htmlCanvas/detect'
-import { createProgram, createQuadBuffer, useProgram } from '@/lib/htmlCanvas/webgl'
+import { createProgram, createQuadBuffer, bindProgram } from '@/lib/htmlCanvas/webgl'
 import { FULLSCREEN_VS, CRT_FS, GLITCH_FS } from '@/lib/htmlCanvas/shaders'
 
 interface Props {
@@ -139,7 +139,7 @@ function CanvasShell({ children, className }: Props) {
         if (progress >= 1) {
           s.glitchStart = -1
         } else {
-          useProgram(gl, glitchProg, quad)
+          bindProgram(gl, glitchProg, quad)
           gl.uniform1i(glitch.uContent, 0)
           gl.uniform1f(glitch.uProgress, progress)
           gl.uniform2f(glitch.uResolution, w, h)
@@ -150,7 +150,7 @@ function CanvasShell({ children, className }: Props) {
       }
 
       // CRT + hover haze
-      useProgram(gl, crtProg, quad)
+      bindProgram(gl, crtProg, quad)
       gl.uniform1i(crt.uContent, 0)
       gl.uniform1f(crt.uTime, t)
       gl.uniform2f(crt.uResolution, w, h)
@@ -195,7 +195,7 @@ function CanvasShell({ children, className }: Props) {
       gl.deleteProgram(crtProg)
       gl.deleteProgram(glitchProg)
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- one-time setup
+  }, [])
 
   // ── Route-change glitch trigger ──
   useEffect(() => {

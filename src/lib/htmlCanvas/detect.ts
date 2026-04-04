@@ -9,14 +9,14 @@ export function isHtmlInCanvasSupported(): boolean {
   if (_supported !== null) return _supported
 
   try {
-    const canvas = document.createElement('canvas')
-    if (typeof (canvas as any).requestPaint !== 'function') {
+    const canvas = document.createElement('canvas') as HTMLCanvasElement & { requestPaint?: unknown }
+    if (typeof canvas.requestPaint !== 'function') {
       _supported = false
       return false
     }
 
-    const gl = canvas.getContext('webgl2')
-    if (!gl || typeof (gl as any).texElementImage2D !== 'function') {
+    const gl = canvas.getContext('webgl2') as (WebGL2RenderingContext & { texElementImage2D?: unknown }) | null
+    if (!gl || typeof gl.texElementImage2D !== 'function') {
       _supported = false
       return false
     }
