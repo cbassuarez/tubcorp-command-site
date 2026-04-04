@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect, useCallback, useState } from 'react'
 import { programs } from '@/components/heerich/programs'
 import { renderScene, fitCamera } from '@/lib/isoRenderer'
 import { DitheredShadow } from '@/components/DitheredShadow'
@@ -55,7 +55,8 @@ function frameLooksBlank(ctx: CanvasRenderingContext2D, w: number, h: number): b
 }
 
 export function AnimatedHeerichCanvas({ program, theme = 'light', className, noShadow }: AnimatedHeerichCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [canvasVersion, setCanvasVersion] = useState(0)
   const rafRef = useRef(0)
   const startRef = useRef(0)
   const lastFrameRef = useRef(0)
@@ -64,6 +65,12 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
   const sizeRef = useRef({ w: 0, h: 0 })
 
   const prog = programs[program] ?? programs['idle-drift']
+
+  const bindCanvasRef = useCallback((node: HTMLCanvasElement | null) => {
+    if (canvasRef.current === node) return
+    canvasRef.current = node
+    setCanvasVersion((v) => v + 1)
+  }, [])
 
   const paint = useCallback((elapsed: number, guardBlank = false) => {
     const canvas = canvasRef.current
@@ -154,11 +161,11 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
       resizeObs.disconnect()
       observer.disconnect()
     }
-  }, [prog, theme, paint])
+  }, [canvasVersion, prog, theme, paint])
 
   const canvas = (
     <canvas
-      ref={canvasRef}
+      ref={bindCanvasRef}
       className={[
         'pointer-events-none overflow-hidden border border-line bg-surface-elevated',
         noShadow ? className ?? '' : 'w-full h-full',
