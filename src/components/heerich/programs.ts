@@ -13,20 +13,23 @@ export interface HeerichProgram {
 
 // ── Palettes ──
 
+// ── Palettes (derived from funky-shadow "plasma" preset) ──
+// plasma stops: [0,0,135] [135,0,175] [255,0,85] [255,175,0] [255,255,85] [85,255,85] [0,175,175]
+
 const PALETTES = {
   light: {
-    baseFill: '#d9e1e8', baseStroke: '#8b98a3', baseTop: '#eff4f8',
-    voxFill: '#b8c4ce', voxStroke: '#73818d', voxTop: '#d2dde5',
-    actFill: '#5dc88d', actStroke: '#1f925b', actTop: '#0f7b47',
-    hiTop: '#065d37', hiFill: '#34a66d',
-    dimFill: '#a8b4be', dimTop: '#c8d2da',
+    baseFill: '#d9d0e8', baseStroke: '#8b7da3', baseTop: '#efe8f8',
+    voxFill: '#c4b0d8', voxStroke: '#8060a0', voxTop: '#d8c8e8',
+    actFill: '#c830a0', actStroke: '#8700af', actTop: '#ff0055',
+    hiTop: '#ffaf00', hiFill: '#e04088',
+    dimFill: '#b0a0c0', dimTop: '#c8b8d8',
   },
   dark: {
-    baseFill: '#1a1a1a', baseStroke: '#2a2a2a', baseTop: '#222222',
-    voxFill: '#282828', voxStroke: '#333333', voxTop: '#303030',
-    actFill: '#1a3326', actStroke: '#2a5940', actTop: '#2ea35f',
-    hiTop: '#3ddb7a', hiFill: '#1f4a33',
-    dimFill: '#222222', dimTop: '#282828',
+    baseFill: '#140020', baseStroke: '#2a0040', baseTop: '#1a0030',
+    voxFill: '#200038', voxStroke: '#3a0058', voxTop: '#2a0048',
+    actFill: '#8700af', actStroke: '#a020c0', actTop: '#ff0055',
+    hiTop: '#ffaf00', hiFill: '#c830a0',
+    dimFill: '#180028', dimTop: '#200038',
   },
 } as const
 

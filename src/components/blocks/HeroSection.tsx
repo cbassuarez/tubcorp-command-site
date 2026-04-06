@@ -43,7 +43,7 @@ export function HeroSection({ block }: HeroSectionProps) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
-              className={`${isCompact ? 'max-w-2xl' : isFull ? '' : 'max-w-3xl'}`}
+              className={`bg-surface-primary p-6 lg:p-8 ${isCompact ? 'max-w-2xl' : isFull ? '' : 'max-w-3xl'}`}
             >
             {block.eyebrow && (
               <p className={`mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${
