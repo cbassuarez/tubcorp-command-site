@@ -104,6 +104,10 @@ export function AnimatedHeerichCanvas({ program, theme = 'light', className, noS
     visibleRef.current = true
     hasPaintedRef.current = false
     guardNextPaintRef.current = true
+    // Force re-measure when the canvas element changes (e.g. DitheredShadow
+    // re-mounts it inside FunkyShadow). Without this, resize() sees the same
+    // CSS dimensions and skips setting the new element's backing store.
+    sizeRef.current = { w: 0, h: 0 }
 
     // Size the canvas
     const resize = () => {

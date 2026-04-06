@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { CommandButton } from '@/components/CommandButton'
+import { DitheredShadow } from '@/components/DitheredShadow'
 import { AnimatedHeerichCanvas } from '@/components/heerich/AnimatedHeerichCanvas'
 import { resolveActionHref } from '@/lib/actions'
 import type { HeroBlock, PageCommandAction } from '@/types/contracts'
@@ -30,12 +31,20 @@ export function HeroSection({ block }: HeroSectionProps) {
 
       <div className="relative mx-auto max-w-[1420px] px-4 lg:px-8">
         <div className={isFull ? 'grid items-center gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12' : ''}>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className={`${isCompact ? 'max-w-2xl' : isFull ? '' : 'max-w-3xl'}`}
+          <DitheredShadow
+            preset="plasma"
+            offsetY={16}
+            blur={36}
+            opacity={0.5}
+            pixelScale={3}
+            radius={8}
           >
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className={`${isCompact ? 'max-w-2xl' : isFull ? '' : 'max-w-3xl'}`}
+            >
             {block.eyebrow && (
               <p className={`mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${
                 isDark ? 'text-accent-signal' : 'text-accent-cyan'
@@ -70,6 +79,7 @@ export function HeroSection({ block }: HeroSectionProps) {
               </div>
             )}
           </motion.div>
+          </DitheredShadow>
 
           {isFull && (
             <motion.div

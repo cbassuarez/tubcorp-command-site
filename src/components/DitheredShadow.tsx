@@ -23,10 +23,17 @@ const TUB_COLORS: Record<TubPreset, ColorStops> = {
   amber: [[38, 16, 6], [114, 52, 12], [194, 112, 24], [252, 182, 52], [255, 132, 86], [214, 92, 154]],
 }
 
+function isTubPreset(name: string): name is TubPreset {
+  return name in TUB_COLORS
+}
+
+/** TubCorp custom preset name or a funky-shadow built-in preset name */
+type ShadowPreset = TubPreset | (string & {})
+
 interface DitheredShadowProps {
   children: ReactNode
-  /** TubCorp shadow preset */
-  preset?: TubPreset
+  /** TubCorp or funky-shadow built-in preset name */
+  preset?: ShadowPreset
   /** Custom color stops (overrides preset) */
   colors?: ColorStops
   /** Shadow offset Y (default 12) */
@@ -51,6 +58,17 @@ interface DitheredShadowProps {
   shape?: 'line' | 'radial'
   /** Outer wrapper className */
   className?: string
+}
+
+/** Resolve preset to either custom `colors` or a funky-shadow built-in `preset` string. */
+function resolvePreset(
+  preset: ShadowPreset,
+  colors?: ColorStops,
+): { colors: ColorStops } | { preset: string } {
+  if (colors) return { colors }
+  if (isTubPreset(preset)) return { colors: TUB_COLORS[preset] }
+  // Built-in funky-shadow preset — pass the name through
+  return { preset }
 }
 
 export function DitheredShadow({
@@ -90,7 +108,7 @@ export function DitheredShadow({
           width={size.w}
           height={size.h}
           radius={radius}
-          colors={colors ?? TUB_COLORS[preset]}
+          {...resolvePreset(preset, colors)}
           pixelScale={pixelScale}
           offsetX={offsetX}
           offsetY={offsetY}

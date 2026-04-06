@@ -64,7 +64,7 @@ function FeatureCard({ title, body, link }: { title: string; body: string; icon?
   const inner = link ? <Link to={link}>{content}</Link> : content
 
   return (
-    <DitheredShadow preset="subtle" offsetY={8} blur={18} opacity={0.3} pixelScale={3}>
+    <DitheredShadow preset="magma" offsetY={8} blur={18} opacity={0.3} pixelScale={3}>
       <HoverCanvas>{inner}</HoverCanvas>
     </DitheredShadow>
   )
