@@ -42,7 +42,7 @@ export function PipelineSection({ block }: PipelineSectionProps) {
                   {String(i + 1).padStart(2, '0')}
                 </div>
                 <HoverCanvas className="flex-1">
-                  <div className="border border-line bg-surface-secondary/60 p-5">
+                  <div className="border border-line bg-surface-secondary p-5">
                     <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
                       {step.label}
                     </h3>

@@ -63,7 +63,7 @@ function CardSwitch({ item }: { item: CardItem }) {
 
 function CaseStudyCard({ item }: { item: CaseStudyCardType }) {
   return (
-    <Link to={`/case-studies#${item.slug}`} className="block h-full border border-line bg-surface-secondary/60 p-5 transition-colors hover:bg-surface-secondary">
+    <Link to={`/case-studies#${item.slug}`} className="block h-full border border-line bg-surface-secondary p-5 transition-colors hover:bg-surface-secondary">
       <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
         {item.title}
       </h3>
@@ -84,7 +84,7 @@ function CaseStudyCard({ item }: { item: CaseStudyCardType }) {
 
 function TeamMemberCard({ item }: { item: TeamCardType }) {
   return (
-    <div className="border border-line bg-surface-secondary/60 p-5">
+    <div className="border border-line bg-surface-secondary p-5">
       <div className="mb-3 h-16 w-16 border border-line bg-surface-elevated" aria-hidden />
       <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">{item.name}</h3>
       <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-accent-cyan">{item.title}</p>
@@ -95,7 +95,7 @@ function TeamMemberCard({ item }: { item: TeamCardType }) {
 
 function JobListingCard({ item }: { item: JobCardType }) {
   return (
-    <div className="flex h-full flex-col border border-line bg-surface-secondary/60 p-5">
+    <div className="flex h-full flex-col border border-line bg-surface-secondary p-5">
       <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">{item.title}</h3>
       <div className="mt-1 flex gap-3">
         <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-accent-cyan">{item.department}</span>
@@ -111,7 +111,7 @@ function JobListingCard({ item }: { item: JobCardType }) {
 
 function PressItemCard({ item }: { item: PressCardType }) {
   const inner = (
-    <div className="border border-line bg-surface-secondary/60 p-5 transition-colors hover:bg-surface-secondary">
+    <div className="border border-line bg-surface-secondary p-5 transition-colors hover:bg-surface-secondary">
       <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-txt-muted">{item.date}</p>
       <h3 className="mt-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">{item.title}</h3>
       {item.source && (
@@ -126,7 +126,7 @@ function PressItemCard({ item }: { item: PressCardType }) {
 
 function BlogPostCard({ item }: { item: BlogCardType }) {
   return (
-    <Link to={`/resources/blog/${item.slug}`} className="block border border-line bg-surface-secondary/60 p-5 transition-colors hover:bg-surface-secondary">
+    <Link to={`/resources/blog/${item.slug}`} className="block border border-line bg-surface-secondary p-5 transition-colors hover:bg-surface-secondary">
       <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-txt-muted">{item.date}</p>
       <h3 className="mt-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">{item.title}</h3>
       <p className="mt-2 text-xs leading-relaxed text-txt-secondary">{item.summary}</p>

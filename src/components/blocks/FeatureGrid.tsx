@@ -53,7 +53,7 @@ export function FeatureGrid({ block }: FeatureGridProps) {
 
 function FeatureCard({ title, body, link }: { title: string; body: string; icon?: string; link?: string }) {
   const content = (
-    <div className="h-full border border-line bg-surface-secondary/60 p-5">
+    <div className="h-full border border-line bg-surface-secondary p-5">
       <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-txt">
         {title}
       </h3>

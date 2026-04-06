@@ -38,7 +38,7 @@ export function TierSection({ block }: TierSectionProps) {
               className={`flex flex-col border p-6 ${
                 tier.highlighted
                   ? 'border-accent-signal bg-accent-signal/5'
-                  : 'border-line bg-surface-secondary/60'
+                  : 'border-line bg-surface-secondary'
               }`}
             >
               <h3 className="font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-txt">

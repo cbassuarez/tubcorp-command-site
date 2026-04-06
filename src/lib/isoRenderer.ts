@@ -187,12 +187,10 @@ export function fitCamera(
   canvasW: number,
   canvasH: number,
 ): IsoCamera {
-  // Isometric projection: width spans (gridW + gridD) * tileW/2
-  // height spans (gridW + gridD) * tileH/2 + maxZ * tileZ
-  // We want to fit within canvas with some padding
-  const pad = 0.15
-  const usableW = canvasW * (1 - pad)
-  const usableH = canvasH * (1 - pad)
+  // Fill the canvas edge-to-edge (slight overflow is fine — scenes
+  // should feel immersive, not float in whitespace).
+  const usableW = canvasW * 1.08
+  const usableH = canvasH * 1.08
 
   // tileW is the limiting factor; tileH = tileW/2, tileZ = tileW * 0.6
   const tileFromW = usableW / (gridW + gridD)
