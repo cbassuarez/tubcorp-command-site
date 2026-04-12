@@ -18,6 +18,7 @@ import { CareersPage } from '@/pages/marketing/CareersPage'
 import { PressPage } from '@/pages/marketing/PressPage'
 import { ProcurementPage } from '@/pages/marketing/ProcurementPage'
 import { PrivacyPage } from '@/pages/marketing/PrivacyPage'
+import { SupportPage } from '@/pages/marketing/SupportPage'
 import { DownloadPage } from '@/pages/marketing/DownloadPage'
 import { EntryPage } from '@/pages/marketing/EntryPage'
 
@@ -58,6 +59,7 @@ export default function App() {
             <Route path="/company/press" element={<PressPage />} />
             <Route path="/procurement" element={<ProcurementPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/support" element={<SupportPage />} />
             <Route path="/download" element={<DownloadPage />} />
           </Route>
 
